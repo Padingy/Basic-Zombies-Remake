@@ -1,0 +1,8 @@
+{
+	"SourceFiles": [
+		"C:\\Users\\buggi\\Desktop\\UE4 Projects\\BasicZombies\\Zombies\\Source\\Zombies\\Zombies.Build.cs",
+		"C:\\Users\\buggi\\Desktop\\UE4 Projects\\BasicZombies\\Zombies\\Source\\Zombies.Target.cs",
+		"C:\\Users\\buggi\\Desktop\\UE4 Projects\\BasicZombies\\Zombies\\Source\\ZombiesEditor.Target.cs"
+	],
+	"EngineVersion": "4.27.2"
+}

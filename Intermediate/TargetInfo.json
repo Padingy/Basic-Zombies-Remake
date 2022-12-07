@@ -1,0 +1,14 @@
+{
+	"Targets": [
+		{
+			"Name": "Zombies",
+			"Path": "C:\\Users\\buggi\\Desktop\\UE4 Projects\\BasicZombies\\Zombies\\Source\\Zombies.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "ZombiesEditor",
+			"Path": "C:\\Users\\buggi\\Desktop\\UE4 Projects\\BasicZombies\\Zombies\\Source\\ZombiesEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}

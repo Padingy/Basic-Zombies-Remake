@@ -1,0 +1,5 @@
+C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/GeneratedCppIncludes.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/MetaData.h
+C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies/ZombiesProjectile.h
+C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombiesProjectile.generated.h
