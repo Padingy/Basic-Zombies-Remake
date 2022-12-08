@@ -3,7 +3,7 @@
   <ItemGroup>
     <None Include="..\..\Zombies.uproject" />
     <Filter Include="Source">
-      <UniqueIdentifier>{7FE7FB9C-90F4-4039-82E8-1FB757DD5C8C}</UniqueIdentifier>
+      <UniqueIdentifier>{50E51E59-21BF-4FFC-B64C-606688E44F7D}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\Zombies.Target.cs">
       <Filter>Source</Filter>
@@ -11,8 +11,11 @@
     <None Include="..\..\Source\ZombiesEditor.Target.cs">
       <Filter>Source</Filter>
     </None>
+    <None Include="..\..\.gitattributes" />
+    <None Include="..\..\.gitignore" />
+    <None Include="..\..\README.md" />
     <Filter Include="Config">
-      <UniqueIdentifier>{5677B8C8-8817-48F3-BD2D-5BE95B40A5AC}</UniqueIdentifier>
+      <UniqueIdentifier>{0D68E379-E283-4A1B-81F7-6EE968CF5264}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Config\DefaultEditor.ini">
       <Filter>Config</Filter>
@@ -30,7 +33,7 @@
       <Filter>Config</Filter>
     </None>
     <Filter Include="Source\Zombies">
-      <UniqueIdentifier>{3F42530E-08B7-4E6F-9322-D0CA0600C291}</UniqueIdentifier>
+      <UniqueIdentifier>{459BC280-8C56-4AC4-907D-ADF53A7A9837}</UniqueIdentifier>
     </Filter>
     <None Include="..\..\Source\Zombies\Zombies.Build.cs">
       <Filter>Source\Zombies</Filter>
@@ -60,51 +63,75 @@
       <Filter>Source\Zombies</Filter>
     </ClInclude>
     <Filter Include="Source\Zombies\Private">
-      <UniqueIdentifier>{A87E064F-A177-4FEE-A545-192FA6CDD7CE}</UniqueIdentifier>
+      <UniqueIdentifier>{B48AF149-CF45-4281-A05F-97A0104FAB1A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Zombies\Private\Player">
-      <UniqueIdentifier>{4B2E6219-B49E-47DF-97C2-C5B241E3F18B}</UniqueIdentifier>
+      <UniqueIdentifier>{1E1EF2E5-407B-4F43-8816-075CF105DE00}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\Zombies\Private\Player\CharacterBase.cpp">
       <Filter>Source\Zombies\Private\Player</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Zombies\Private\Player\ZombiesCharacter.cpp">
+      <Filter>Source\Zombies\Private\Player</Filter>
+    </ClCompile>
     <Filter Include="Source\Zombies\Private\Zombie">
-      <UniqueIdentifier>{B8887BB1-853B-4035-8151-0582DE411714}</UniqueIdentifier>
+      <UniqueIdentifier>{06A79DB9-06C8-40B3-990F-3FE8A65AC4C9}</UniqueIdentifier>
     </Filter>
     <ClCompile Include="..\..\Source\Zombies\Private\Zombie\ZombieBase.cpp">
       <Filter>Source\Zombies\Private\Zombie</Filter>
     </ClCompile>
     <Filter Include="Source\Zombies\Private\Zombies">
-      <UniqueIdentifier>{CAAAA83C-8F07-44A8-B729-C633CC53A815}</UniqueIdentifier>
+      <UniqueIdentifier>{DA45566E-FF69-422C-B387-5A105077867E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Zombies\Private\Zombies\Game">
-      <UniqueIdentifier>{B8EC4BEE-BF7E-47CB-AD68-E450BCF8F6A9}</UniqueIdentifier>
+      <UniqueIdentifier>{220CF230-DA4C-4E90-8557-45E4123AAE9C}</UniqueIdentifier>
     </Filter>
+    <ClCompile Include="..\..\Source\Zombies\Private\Zombies\Game\CustomZombiesGameMode.cpp">
+      <Filter>Source\Zombies\Private\Zombies\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Source\Zombies\Private\Zombies\Game\PlayerSpawnPoint.cpp">
+      <Filter>Source\Zombies\Private\Zombies\Game</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\Source\Zombies\Private\Zombies\Game\ZombiesGameInstanceBase.cpp">
       <Filter>Source\Zombies\Private\Zombies\Game</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Source\Zombies\Private\Zombies\Game\ZombieSpawnPoint.cpp">
+      <Filter>Source\Zombies\Private\Zombies\Game</Filter>
+    </ClCompile>
     <Filter Include="Source\Zombies\Public">
-      <UniqueIdentifier>{0AD21FAC-47D6-4B78-9A93-C8079B77AD52}</UniqueIdentifier>
+      <UniqueIdentifier>{71F87DE3-15EF-42E6-9456-B31C60BE80E3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Zombies\Public\Player">
-      <UniqueIdentifier>{C32D2D32-E336-41D4-9012-900EF340F1ED}</UniqueIdentifier>
+      <UniqueIdentifier>{A35E4924-19B5-4FB6-8AD1-E3261448A740}</UniqueIdentifier>
     </Filter>
     <ClInclude Include="..\..\Source\Zombies\Public\Player\CharacterBase.h">
       <Filter>Source\Zombies\Public\Player</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Source\Zombies\Public\Player\ZombiesCharacter.h">
+      <Filter>Source\Zombies\Public\Player</Filter>
+    </ClInclude>
     <Filter Include="Source\Zombies\Public\Zombie">
-      <UniqueIdentifier>{98C64A80-4D9E-43FE-9990-B356531F9C98}</UniqueIdentifier>
+      <UniqueIdentifier>{3C92EAEB-679D-411D-A83E-426114DBA79E}</UniqueIdentifier>
     </Filter>
     <ClInclude Include="..\..\Source\Zombies\Public\Zombie\ZombieBase.h">
       <Filter>Source\Zombies\Public\Zombie</Filter>
     </ClInclude>
     <Filter Include="Source\Zombies\Public\Zombies">
-      <UniqueIdentifier>{D763E9E9-BB06-4788-8E37-88ACC33FC04E}</UniqueIdentifier>
+      <UniqueIdentifier>{1B5573DE-B498-4248-A9E2-E5B9CA8C80B8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source\Zombies\Public\Zombies\Game">
-      <UniqueIdentifier>{A6E57194-33EC-4F16-BC2F-49DBB35AD52D}</UniqueIdentifier>
+      <UniqueIdentifier>{439119E0-53EF-4747-8D40-5152C6AED91C}</UniqueIdentifier>
     </Filter>
+    <ClInclude Include="..\..\Source\Zombies\Public\Zombies\Game\CustomZombiesGameMode.h">
+      <Filter>Source\Zombies\Public\Zombies\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Zombies\Public\Zombies\Game\PlayerSpawnPoint.h">
+      <Filter>Source\Zombies\Public\Zombies\Game</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Source\Zombies\Public\Zombies\Game\ZombiesGameInstanceBase.h">
+      <Filter>Source\Zombies\Public\Zombies\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Source\Zombies\Public\Zombies\Game\ZombieSpawnPoint.h">
       <Filter>Source\Zombies\Public\Zombies\Game</Filter>
     </ClInclude>
   </ItemGroup>

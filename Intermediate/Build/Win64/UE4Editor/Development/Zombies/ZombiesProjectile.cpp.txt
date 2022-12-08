@@ -1,6 +1,6 @@
-C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
-C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies\ZombiesProjectile.h
-C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombiesProjectile.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies\ZombiesProjectile.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombiesProjectile.generated.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/ProjectileMovementComponent.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/MovementComponent.h
 C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\MovementComponent.generated.h

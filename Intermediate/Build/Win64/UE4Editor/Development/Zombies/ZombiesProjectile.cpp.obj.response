@@ -32,7 +32,7 @@
 /wd4244
 /wd4838
 /I .
-/I "C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies\Private"
+/I C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies\Private
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\Engine
 /I Runtime
 /I Runtime\Engine\Classes
@@ -232,9 +232,9 @@
 /I Editor\Kismet\Public
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\ClothingSystemRuntimeInterface
 /I Runtime\ClothingSystemRuntimeInterface\Public
-/I "C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Inc\Zombies"
-/I "C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source"
-/I "C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies\Public"
+/I C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies
+/I C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source
+/I C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies\Public
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\AugmentedReality
 /I Runtime\AugmentedReality\Public
 /I ..\Intermediate\Build\Win64\UE4Editor\Inc\MRMesh
@@ -268,12 +268,12 @@
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\shared"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\um"
 /I "C:\Program Files (x86)\Windows Kits\10\include\10.0.19041.0\winrt"
-/FI"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Yu"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
-/Fp"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
-"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies\ZombiesProjectile.cpp"
-/FI"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h"
-/Fo"C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Development\Zombies\ZombiesProjectile.cpp.obj"
+/FI"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Yu"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h"
+/Fp"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\ZombiesEditor\Development\Engine\SharedPCH.Engine.ShadowErrors.h.pch"
+"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies\ZombiesProjectile.cpp"
+/FI"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h"
+/Fo"C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\ZombiesProjectile.cpp.obj"
 /TP
 /GR-
 /W4

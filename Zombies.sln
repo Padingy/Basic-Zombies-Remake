@@ -13,7 +13,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Zombies", "Intermediate\Pro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visualizers", "Visualizers", "{1CCEC849-CC72-4C59-8C36-2F7C38706D4C}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\..\..\Program Files\Epic Games\UE_4.27\Engine\Extras\VisualStudioDebugging\UE4.natvis = ..\..\..\..\..\..\Program Files\Epic Games\UE_4.27\Engine\Extras\VisualStudioDebugging\UE4.natvis
+		..\..\..\..\..\Program Files\Epic Games\UE_4.27\Engine\Extras\VisualStudioDebugging\UE4.natvis = ..\..\..\..\..\Program Files\Epic Games\UE_4.27\Engine\Extras\VisualStudioDebugging\UE4.natvis
 	EndProjectSection
 EndProject
 Global
@@ -29,12 +29,9 @@ Global
 		Shipping|Win32 = Shipping|Win32
 		Shipping|Win64 = Shipping|Win64
 	EndGlobalSection
-	# Visual Assist Section
-	GlobalSection(44630d46-96b5-488c-8df926e21db8c1a3) = preSolution
-		ueSolution=true
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.DebugGame Editor|Win32.ActiveCfg = BuiltWithUnrealBuildTool|Win32
+		{9466C42A-351F-445A-B585-B1EE4D87FB08}.DebugGame Editor|Win32.Build.0 = BuiltWithUnrealBuildTool|Win32
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.DebugGame Editor|Win64.ActiveCfg = BuiltWithUnrealBuildTool|Win32
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.DebugGame|Win32.ActiveCfg = BuiltWithUnrealBuildTool|Win32
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.DebugGame|Win64.ActiveCfg = BuiltWithUnrealBuildTool|Win32
@@ -44,7 +41,8 @@ Global
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.Development|Win64.ActiveCfg = BuiltWithUnrealBuildTool|Win32
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.Shipping|Win32.ActiveCfg = BuiltWithUnrealBuildTool|Win32
 		{9466C42A-351F-445A-B585-B1EE4D87FB08}.Shipping|Win64.ActiveCfg = BuiltWithUnrealBuildTool|Win32
-		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame Editor|Win32.ActiveCfg = Invalid|Win32
+		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame Editor|Win32.ActiveCfg = Development_Editor|Win32
+		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame Editor|Win32.Build.0 = Development_Editor|Win32
 		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame Editor|Win64.ActiveCfg = DebugGame_Editor|x64
 		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame Editor|Win64.Build.0 = DebugGame_Editor|x64
 		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1}.DebugGame|Win32.ActiveCfg = DebugGame|Win32
@@ -69,5 +67,11 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9466C42A-351F-445A-B585-B1EE4D87FB08} = {94A6C6F3-99B3-346E-9557-ABF9D4064DBD}
 		{8BC6D59E-E46D-49CF-85A5-DA54DAC093D1} = {8E2F6A87-1826-34F4-940C-CC23A48F9FE4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FEA65EB-1C17-4004-8D04-BB1F89445438}
+	EndGlobalSection
+	GlobalSection(44630d46-96b5-488c-8df926e21db8c1a3) = preSolution
+		ueSolution = true
 	EndGlobalSection
 EndGlobal

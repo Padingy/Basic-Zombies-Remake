@@ -1,0 +1,34 @@
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Zombies/Game/CustomZombiesGameMode.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/GameModeBase.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Engine/ServerStatReplicator.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\ServerStatReplicator.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\GameModeBase.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\CustomZombiesGameMode.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Zombies/Game/PlayerSpawnPoint.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Engine/TargetPoint.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\TargetPoint.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\PlayerSpawnPoint.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Zombies/Game/ZombieSpawnPoint.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombieSpawnPoint.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Player/ZombiesCharacter.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Player/CharacterBase.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/Character.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/CharacterMovementReplication.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\CharacterMovementReplication.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\GameFramework/RootMotionSource.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\RootMotionSource.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\Character.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\CharacterBase.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombiesCharacter.generated.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Zombie/ZombieBase.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombieBase.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Kismet/GameplayStatics.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Kismet/KismetSystemLibrary.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\CoreUObject\Public\UObject/PropertyAccessUtil.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\KismetSystemLibrary.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Sound/DialogueTypes.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\DialogueTypes.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Source\Runtime\Engine\Classes\Kismet\GameplayStaticsTypes.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\GameplayStaticsTypes.generated.h
+C:\Program Files\Epic Games\UE_4.27\Engine\Intermediate\Build\Win64\UE4Editor\Inc\Engine\GameplayStatics.generated.h

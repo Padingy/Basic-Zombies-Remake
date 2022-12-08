@@ -103,7 +103,7 @@ void ACharacterBase::OnFire()
 			// spawn the projectile at the muzzle
 			World->SpawnActor<AZombiesProjectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
 
-			UE_LOG(LogTemp, Warning, TEXT("OnFire"));
+			UE_LOG(LogTemp, Warning, TEXT("OnFire Testing"));
 		}
 	}
 

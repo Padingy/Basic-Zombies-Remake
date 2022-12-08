@@ -1,2 +1,2 @@
-C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
-C:\Users\buggi\Desktop\UE4 Projects\BasicZombies\Zombies\Source\Zombies\Zombies.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
+C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies\Zombies.h
