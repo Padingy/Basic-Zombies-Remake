@@ -6,6 +6,11 @@
 Doxygen/html/*
 Doxygen/latex/*
 
+# Ignore Binaries, Intermediate and Saved
+Binaries/*
+Intermediate/*
+Saved/*
+
 # User-specific files
 *.rsuser
 *.suo

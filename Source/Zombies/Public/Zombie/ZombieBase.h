@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Zombies/Public/Player/ZombiesCharacter.h"
 #include "ZombieBase.generated.h"
 
 UCLASS()
@@ -19,6 +20,25 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+		void DestroyActor();
+
+	
+
+protected:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+		float maxHealth;
+
+	UPROPERTY(EditAnywhere)
+		float health;
+
 public:	
+
+	void Hit(class AZombiesCharacter* attacker, FString hitBone);
+
+	void HandleBoneHits(class AZombiesCharacter* attacker, FString hitBone);
+	bool DecreaseHealth(float value);
+	float GetHealth();
 
 };
