@@ -1,3 +1,0 @@
-C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Development\Zombies\Definitions.Zombies.h
-C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Source\Zombies/Public/Zombies/Game/ZombiesGameInstanceBase.h
-C:\Users\buggi\Documents\GitHub\Basic-Zombies-Remake\Intermediate\Build\Win64\UE4Editor\Inc\Zombies\ZombiesGameInstanceBase.generated.h
