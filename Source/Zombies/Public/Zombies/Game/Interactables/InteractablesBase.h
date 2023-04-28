@@ -21,4 +21,10 @@ protected:
 
 public:	
 
+	FString UIMessage;
+
+	FString name;
+
+	int32 cost;
+
 };

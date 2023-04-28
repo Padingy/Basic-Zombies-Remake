@@ -23,6 +23,9 @@ protected:
 	void SetPlayerSpawns();
 	void SetZombieSpawns();
 
+	UPROPERTY(EditAnywhere, Category = "Player Settings")
+		TSubclassOf<class AZombiesCharacter> playerClass;
+
 	UPROPERTY(EditAnywhere, Category = "Zombie Settings")
 		TSubclassOf<class AZombieBase> zombieClass;
 

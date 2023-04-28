@@ -4,9 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Zombies/Public/Player/CharacterBase.h"
+#include "Zombies/Public/Zombies/Game/Interactables/InteractablesBase.h"
+#include "Zombies/Public/Zombies/Game/Weapons/WeaponsBase.h"
 #include "ZombiesCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPointsChanged, int32, points);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractMessageChanged, FString, message);
 
 class UCameraComponent;
 
@@ -24,8 +27,22 @@ protected:
 
 	void OnFire();
 
+	void FindInteractableObjects();
+
+	void SpawnStartingWeapons();
+
+	void AddWeapon(AWeaponsBase* weapon);
+	void RemoveWeapon(AWeaponsBase* weapon);
+
+	void EquipWeapon(AWeaponsBase* weapon);
+
+	void SetCurrentWeapon(AWeaponsBase* newWeapon);
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	void OnNextWeapon();
+	void OnPrevWeapon();
 
 public:
 
@@ -35,11 +52,31 @@ public:
 
 	int32 GetPoints();
 
+	FName GetWeaponAttachPoint() const;
+
 protected:
 
-	UPROPERTY(EditDefaultsOnly)
+	FTimerHandle timerHandle;
+
+	AInteractablesBase* interactable;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
+		TArray<TSubclassOf<class AWeaponsBase>> startingWeaponClasses;
+
+	UPROPERTY(EditDefaultsOnly, Category = Weapon)
+		FName weaponAttachPoint;
+
+	AWeaponsBase* currentWeapon;
+
+	int32 weaponIndex;
+	TArray<AWeaponsBase*> weaponArray;
+
+	UPROPERTY(EditAnywhere)
 		int32 points;
 
 	UPROPERTY(BlueprintAssignable)
 		FPointsChanged OnPointsChanged;
+
+	UPROPERTY(BlueprintAssignable)
+		FInteractMessageChanged OnInteractMessageChanged;
 };

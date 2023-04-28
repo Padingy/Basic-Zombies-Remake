@@ -38,7 +38,7 @@ void ACustomZombiesGameMode::PostLogin(APlayerController* NewPlayer)
 		if (!spawnPoint->GetIsUsed())
 		{
 			FVector SpawnLocation = spawnPoint->GetActorLocation();
-			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(DefaultPawnClass, SpawnLocation, FRotator::ZeroRotator))
+			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
 			{
 				NewPlayer->Possess(pawn);
 				spawnPoint->SetIsUsed(true);

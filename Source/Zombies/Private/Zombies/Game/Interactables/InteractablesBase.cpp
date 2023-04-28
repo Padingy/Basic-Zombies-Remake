@@ -6,7 +6,9 @@
 // Sets default values
 AInteractablesBase::AInteractablesBase()
 {
-
+	UIMessage = "Hold F to buy ";
+	name = "InteractableBase";
+	cost = 500;
 }
 
 // Called when the game starts or when spawned
