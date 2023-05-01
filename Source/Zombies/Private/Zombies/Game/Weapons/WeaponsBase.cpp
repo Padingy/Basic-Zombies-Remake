@@ -21,6 +21,16 @@ void AWeaponsBase::Fire()
 
 void AWeaponsBase::Reload()
 {
+	if (currentReserveAmmo > 0)
+	{
+		int32 missingAmmo = FMath::Min(weaponData.magazineSize - currentAmmo, (currentAmmo + currentReserveAmmo) - currentAmmo);
+
+		currentAmmo += missingAmmo;
+
+		currentReserveAmmo -= missingAmmo;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
+	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);
 }
 
 bool AWeaponsBase::GetInfiniteAmmo() const
@@ -46,6 +56,16 @@ int32 AWeaponsBase::GetMagazineAmount() const
 float AWeaponsBase::GetFireRate() const
 {
 	return weaponData.fireRate;
+}
+
+void AWeaponsBase::SetCurrentAmmo(int32 newCurrentAmmo)
+{
+	currentAmmo = newCurrentAmmo;
+}
+
+void AWeaponsBase::SetCurrentReserveAmmo(int32 newCurrentReserveAmmo)
+{
+	currentReserveAmmo = newCurrentReserveAmmo;
 }
 
 void AWeaponsBase::SetNewOwner(AZombiesCharacter* newOwner)

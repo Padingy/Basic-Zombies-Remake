@@ -15,24 +15,33 @@ void AWeaponsLineTrace::Fire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire"));
 
-	TArray<FHitResult>hitResults = PerformLineTrace(2000.0f);
-
-	if (hitResults.Num() != 0)
+	if (currentAmmo > 0)
 	{
-		for (FHitResult hit : hitResults)
+		TArray<FHitResult>hitResults = PerformLineTrace(2000.0f);
+
+		if (hitResults.Num() != 0)
 		{
-			if (AZombieBase* zombie = Cast<AZombieBase>(hit.GetActor()))
+			for (FHitResult hit : hitResults)
 			{
-				FString hitBone = hit.BoneName.ToString();
+				if (AZombieBase* zombie = Cast<AZombieBase>(hit.GetActor()))
+				{
+					FString hitBone = hit.BoneName.ToString();
 
-				zombie->Hit(weaponOwner, hitBone);
+					zombie->Hit(weaponOwner, hitBone);
 
-				UE_LOG(LogTemp, Warning, TEXT("Shot Hit on Channel: %s"), *zombie->GetName());
+					UE_LOG(LogTemp, Warning, TEXT("Shot Hit on Channel: %s"), *zombie->GetName());
 
-				UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
+					UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
+				}
 			}
 		}
+		weaponOwner->IncreasePoints(1);
+
+		currentAmmo--;
 	}
+	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
+	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);
+
 }
 
 TArray<FHitResult> AWeaponsLineTrace::PerformLineTrace(float distance)

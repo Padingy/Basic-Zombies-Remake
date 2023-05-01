@@ -37,6 +37,11 @@ void AZombiesCharacter::OnFire()
 	}
 }
 
+void AZombiesCharacter::Reload()
+{
+	currentWeapon->Reload();
+}
+
 void AZombiesCharacter::FindInteractableObjects()
 {
 	FVector start = GetFirstPersonCameraComponent()->GetComponentLocation();
@@ -165,6 +170,8 @@ void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AZombiesCharacter::OnNextWeapon);
 	PlayerInputComponent->BindAction("PrevWeapon", IE_Pressed, this, &AZombiesCharacter::OnPrevWeapon);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AZombiesCharacter::Reload);
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AZombiesCharacter::TurnAtRate);

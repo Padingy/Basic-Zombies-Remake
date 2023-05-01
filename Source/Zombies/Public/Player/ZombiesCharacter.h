@@ -27,6 +27,8 @@ protected:
 
 	void OnFire();
 
+	void Reload();
+
 	void FindInteractableObjects();
 
 	void SpawnStartingWeapons();

@@ -62,6 +62,9 @@ public:
 	int32 GetMagazineAmount() const;
 	float GetFireRate() const;
 
+	void SetCurrentAmmo(int32 newCurrentAmmo);
+	void SetCurrentReserveAmmo(int32 newCurrentReserveAmmo);
+
 	void SetNewOwner(AZombiesCharacter* newOwner);
 	class AZombiesCharacter* GetWeaponOwner() const;
 
@@ -87,7 +90,9 @@ protected:
 	UPROPERTY(Transient)
 		class AZombiesCharacter* weaponOwner;
 
-	int32 currentAmmo;
+	UPROPERTY(EditAnywhere, Category = Ammo, meta = (ToolTip = "The amount of ammo in the magazine. Also the amount of ammo the gun will start with when spawned"))
+		int32 currentAmmo; //Ammo in magazine & Starting Ammo
 
-	int32 currentMaxAmmo;
+	UPROPERTY(EditAnywhere, Category = Ammo, meta = (ToolTip = "The total amount of ammo left. This is also used for the starting amount of total bullets when spawned"))
+		int32 currentReserveAmmo; //Ammo in Magazine + reserve magaizines & Starting Ammo
 };
