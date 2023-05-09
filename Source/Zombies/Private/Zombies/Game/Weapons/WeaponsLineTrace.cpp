@@ -13,8 +13,6 @@ AWeaponsLineTrace::AWeaponsLineTrace()
 
 void AWeaponsLineTrace::Fire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire"));
-
 	if (currentAmmo > 0)
 	{
 		TArray<FHitResult>hitResults = PerformLineTrace(2000.0f);
@@ -35,9 +33,9 @@ void AWeaponsLineTrace::Fire()
 				}
 			}
 		}
-		weaponOwner->IncreasePoints(1);
 
-		currentAmmo--;
+		if (!weaponData.bInfiniteAmmo)
+			currentAmmo--;
 	}
 	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
 	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);

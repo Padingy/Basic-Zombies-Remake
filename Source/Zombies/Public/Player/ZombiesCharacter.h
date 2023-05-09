@@ -25,14 +25,44 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	//Firing Functions
 	void OnFire();
+	void OnEndFire();
 
+	//Reload
 	void Reload();
 
+	//Interacting
 	void FindInteractableObjects();
 
+	void OnInteract();
+
+	//Weapons Starting / Switching
 	void SpawnStartingWeapons();
 
+	void OnNextWeapon();
+	void OnPrevWeapon();
+
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+public:
+
+	//Points
+	void IncreasePoints(int value);
+
+	void DecreasePoints(int value);
+
+	int32 GetPoints();
+
+	//Weapons
+	FName GetWeaponAttachPoint() const;
+
+	TArray<AWeaponsBase*> GetWeaponArray();
+
+	int32 GetMaxWeapons();
+
+	//Weapon Equiping / Switching
 	void AddWeapon(AWeaponsBase* weapon);
 	void RemoveWeapon(AWeaponsBase* weapon);
 
@@ -40,30 +70,20 @@ protected:
 
 	void SetCurrentWeapon(AWeaponsBase* newWeapon);
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	void OnNextWeapon();
-	void OnPrevWeapon();
-
-public:
-
-	void IncreasePoints(int value);
-
-	void DecreasePoints(int value);
-
-	int32 GetPoints();
-
-	FName GetWeaponAttachPoint() const;
-
 protected:
 
 	FTimerHandle timerHandle;
 
 	AInteractablesBase* interactable;
 
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+		float interactDistance;
+
 	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
 		TArray<TSubclassOf<class AWeaponsBase>> startingWeaponClasses;
+
+	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
+		int32 maxWeapons;
 
 	UPROPERTY(EditDefaultsOnly, Category = Weapon)
 		FName weaponAttachPoint;

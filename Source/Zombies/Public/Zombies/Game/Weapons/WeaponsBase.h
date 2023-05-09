@@ -8,6 +8,15 @@
 
 class AZombiesCharacter;
 
+UENUM()
+enum class EWeaponState
+{
+	Idle UMETA(DisplayName = "Idle"),
+	Firing UMETA(DisplayName = "Firing"),
+	Reloading UMETA(DisplayName = "Reloading"),
+	Empty UMETA(DisplayName = "Empty")
+};
+
 USTRUCT()
 struct FWeaponData
 {
@@ -53,8 +62,8 @@ public:
 	// Sets default values for this actor's properties
 
 	virtual void Fire();
+	virtual void EndFire();
 	virtual void Reload();
-
 
 	bool GetInfiniteAmmo() const;
 	float GetDamage() const;
@@ -78,6 +87,10 @@ public:
 	void OnUnequip();
 
 protected:
+	virtual void StartCooldown(float time);
+	virtual void EndCooldown();
+
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -87,6 +100,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Config)
 		FWeaponData weaponData;
 
+	EWeaponState weaponState;
+
 	UPROPERTY(Transient)
 		class AZombiesCharacter* weaponOwner;
 
@@ -95,4 +110,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Ammo, meta = (ToolTip = "The total amount of ammo left. This is also used for the starting amount of total bullets when spawned"))
 		int32 currentReserveAmmo; //Ammo in Magazine + reserve magaizines & Starting Ammo
+
+	FTimerHandle cooldownTimerHandle;
+	bool bCanFire;
+
 };

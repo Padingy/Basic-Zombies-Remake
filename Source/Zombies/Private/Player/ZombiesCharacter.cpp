@@ -13,6 +13,8 @@ AZombiesCharacter::AZombiesCharacter()
 {
 	points = 500;
 	interactable = nullptr;
+	interactDistance = 100.0f;
+
 }
 
 void AZombiesCharacter::BeginPlay()
@@ -29,6 +31,7 @@ void AZombiesCharacter::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("ZombiesCharacter"));
 }
 
+//Action bound to input for press input to fire current weapon
 void AZombiesCharacter::OnFire()
 {
 	if (currentWeapon)
@@ -37,18 +40,26 @@ void AZombiesCharacter::OnFire()
 	}
 }
 
+//Action bound to input for press input to end fire of current weapon
+void AZombiesCharacter::OnEndFire()
+{
+	currentWeapon->EndFire();
+}
+
+//Action bound to input for press input to reload current weapon
 void AZombiesCharacter::Reload()
 {
 	currentWeapon->Reload();
 }
 
+//Line Trace function to find interactables and send their information through delegates
 void AZombiesCharacter::FindInteractableObjects()
 {
 	FVector start = GetFirstPersonCameraComponent()->GetComponentLocation();
 	FVector rot = GetFirstPersonCameraComponent()->GetComponentRotation().Vector();
 
 	start = start + rot * 50.0f;
-	FVector end = start + rot * 100.0f;
+	FVector end = start + rot * interactDistance;
 
 	FCollisionObjectQueryParams collisionQuery;
 	FCollisionQueryParams collisionParams;
@@ -74,9 +85,20 @@ void AZombiesCharacter::FindInteractableObjects()
 	DrawDebugLine(GetWorld(), start, end, FColor::Yellow, false, 10.0f, 0.0f, 1.0f);
 }
 
+void AZombiesCharacter::OnInteract()
+{
+	if (interactable)
+	{
+		interactable->OnInteract(this);
+	}
+}
+
+//Function to spawn weapons set to start with
 void AZombiesCharacter::SpawnStartingWeapons()
 {
-	int32 numOfStartingWeapons = startingWeaponClasses.Num();
+	int32 numOfStartingWeapons = FMath::Min(maxWeapons, startingWeaponClasses.Num());
+
+	UE_LOG(LogTemp, Warning, TEXT("NumOfStartingWeapons: %d"), numOfStartingWeapons);
 
 	for (int32 i = 0; i < numOfStartingWeapons; i++)
 	{
@@ -90,10 +112,13 @@ void AZombiesCharacter::SpawnStartingWeapons()
 	weaponIndex = 0;
 }
 
+//Functions for Adding and Removing weapons to the owner
 void AZombiesCharacter::AddWeapon(AWeaponsBase* weapon)
 {
 	weapon->SetNewOwner(this);
 	weaponArray.AddUnique(weapon);
+
+	UE_LOG(LogTemp, Warning, TEXT("WeaponArray.Num(): %d"), weaponArray.Num());
 }
 
 void AZombiesCharacter::RemoveWeapon(AWeaponsBase* weapon)
@@ -101,11 +126,13 @@ void AZombiesCharacter::RemoveWeapon(AWeaponsBase* weapon)
 
 }
 
+//Function for Equiping weapon
 void AZombiesCharacter::EquipWeapon(AWeaponsBase* weapon)
 {
 	SetCurrentWeapon(weapon);
 }
 
+//Function for Setting the current weapon for the owner
 void AZombiesCharacter::SetCurrentWeapon(AWeaponsBase* newWeapon)
 {
 	AWeaponsBase* lastWeapon = nullptr;
@@ -154,31 +181,17 @@ FName AZombiesCharacter::GetWeaponAttachPoint() const
 	return weaponAttachPoint;
 }
 
-// Called to bind functionality to input
-void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+TArray<AWeaponsBase*> AZombiesCharacter::GetWeaponArray()
 {
-	// set up gameplay key bindings
-	check(PlayerInputComponent);
-
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AZombiesCharacter::OnFire);
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &AZombiesCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AZombiesCharacter::MoveRight);
-
-	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AZombiesCharacter::OnNextWeapon);
-	PlayerInputComponent->BindAction("PrevWeapon", IE_Pressed, this, &AZombiesCharacter::OnPrevWeapon);
-
-	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AZombiesCharacter::Reload);
-
-	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AZombiesCharacter::TurnAtRate);
-	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AZombiesCharacter::LookUpAtRate);
+	return weaponArray;
 }
 
+int32 AZombiesCharacter::GetMaxWeapons()
+{
+	return maxWeapons;
+}
+
+// Called to bind functionality to input
 void AZombiesCharacter::OnNextWeapon()
 {
 	if (weaponArray.Num() > 1)
@@ -198,3 +211,31 @@ void AZombiesCharacter::OnPrevWeapon()
 		SetCurrentWeapon(weaponArray[nextWeaponIndex]);
 	}
 }
+
+void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	// set up gameplay key bindings
+	check(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AZombiesCharacter::OnFire);
+	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AZombiesCharacter::OnEndFire);
+
+	PlayerInputComponent->BindAxis("MoveForward", this, &AZombiesCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AZombiesCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AZombiesCharacter::OnNextWeapon);
+	PlayerInputComponent->BindAction("PrevWeapon", IE_Pressed, this, &AZombiesCharacter::OnPrevWeapon);
+
+	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AZombiesCharacter::Reload);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AZombiesCharacter::OnInteract);
+
+	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AZombiesCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AZombiesCharacter::LookUpAtRate);
+}
+

@@ -12,11 +12,18 @@ AWeaponsBase::AWeaponsBase()
 	weaponSkeletalMesh->bCastDynamicShadow = false;
 	weaponSkeletalMesh->CastShadow = false;
 	weaponSkeletalMesh->SetupAttachment(RootComponent);
+
+	weaponState = EWeaponState::Idle;
 }
 
 void AWeaponsBase::Fire()
 {
 	
+}
+
+void AWeaponsBase::EndFire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("WeaponBase EndFire"));
 }
 
 void AWeaponsBase::Reload()
@@ -108,6 +115,14 @@ void AWeaponsBase::OnEquip()
 void AWeaponsBase::OnUnequip()
 {
 	DetachWeaponFromMesh();
+}
+
+void AWeaponsBase::StartCooldown(float time)
+{
+}
+
+void AWeaponsBase::EndCooldown()
+{
 }
 
 // Called when the game starts or when spawned

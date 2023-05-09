@@ -2,6 +2,7 @@
 
 
 #include "Zombies/Game/Interactables/InteractablesBase.h"
+#include "Zombies/Public/Player/ZombiesCharacter.h"
 
 // Sets default values
 AInteractablesBase::AInteractablesBase()
@@ -9,6 +10,11 @@ AInteractablesBase::AInteractablesBase()
 	UIMessage = "Hold F to buy ";
 	name = "InteractableBase";
 	cost = 500;
+}
+
+void AInteractablesBase::OnInteract(AZombiesCharacter* interactingPlayer)
+{
+	
 }
 
 // Called when the game starts or when spawned

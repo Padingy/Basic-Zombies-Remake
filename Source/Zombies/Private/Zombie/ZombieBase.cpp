@@ -42,7 +42,6 @@ void AZombieBase::Hit(AZombiesCharacter* attacker, FString hitBone)
 
 void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
 {
-	//Write IF Statements for following bones being hit:
 	//Head
 	if (hitBone == "head")
 	{

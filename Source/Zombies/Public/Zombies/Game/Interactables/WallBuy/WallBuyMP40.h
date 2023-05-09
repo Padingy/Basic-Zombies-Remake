@@ -3,11 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Zombies/Game/Interactables/InteractablesBase.h"
+#include "Zombies/Game/Interactables/WallBuy/InteractablesWallBuyBase.h"
 #include "WallBuyMP40.generated.h"
 
 UCLASS()
-class ZOMBIES_API AWallBuyMP40 : public AInteractablesBase
+class ZOMBIES_API AWallBuyMP40 : public AInteractablesWallBuyBase
 {
 	GENERATED_BODY()
 
@@ -19,8 +19,6 @@ protected:
 
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
-		TSubclassOf<class AWeaponsBase> weaponType;
 
 public:
 

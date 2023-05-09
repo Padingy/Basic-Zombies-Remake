@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	AInteractablesBase();
 
+	virtual void OnInteract(class AZombiesCharacter* interactingPlayer);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
