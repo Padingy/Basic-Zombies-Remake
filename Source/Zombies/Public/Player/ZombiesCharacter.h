@@ -60,6 +60,8 @@ public:
 
 	TArray<AWeaponsBase*> GetWeaponArray();
 
+	AWeaponsBase* GetCurrentWeapon();
+
 	int32 GetMaxWeapons();
 
 	//Weapon Equiping / Switching

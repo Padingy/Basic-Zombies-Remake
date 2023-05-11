@@ -17,6 +17,11 @@ void AInteractablesBase::OnInteract(AZombiesCharacter* interactingPlayer)
 	
 }
 
+FString AInteractablesBase::GetUIMessage(AZombiesCharacter* interactingPlayer)
+{
+	return FString();
+}
+
 // Called when the game starts or when spawned
 void AInteractablesBase::BeginPlay()
 {

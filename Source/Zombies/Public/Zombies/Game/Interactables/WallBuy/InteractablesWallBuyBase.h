@@ -24,4 +24,9 @@ public:
 		int32 ammoCost;
 
 	virtual void OnInteract(AZombiesCharacter* interactingPlayer) override;
+
+	virtual FString GetUIMessage(AZombiesCharacter* interactingPlayer) override;
+
+protected:
+	AWeaponsBase* CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray);
 };

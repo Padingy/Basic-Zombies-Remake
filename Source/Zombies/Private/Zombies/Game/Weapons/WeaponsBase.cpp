@@ -7,11 +7,13 @@
 // Sets default values
 AWeaponsBase::AWeaponsBase()
 {
+
 	weaponSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponsSkeletalMesh"));
 	weaponSkeletalMesh->SetOnlyOwnerSee(false);
 	weaponSkeletalMesh->bCastDynamicShadow = false;
 	weaponSkeletalMesh->CastShadow = false;
-	weaponSkeletalMesh->SetupAttachment(RootComponent);
+
+	RootComponent = weaponSkeletalMesh;
 
 	weaponState = EWeaponState::Idle;
 }

@@ -17,6 +17,8 @@ public:
 
 	virtual void OnInteract(class AZombiesCharacter* interactingPlayer);
 
+	virtual FString GetUIMessage(class AZombiesCharacter* interactingPlayer);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

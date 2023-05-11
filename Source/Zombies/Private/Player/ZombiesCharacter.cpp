@@ -74,8 +74,8 @@ void AZombiesCharacter::FindInteractableObjects()
 	{ 
 		interactable = tempHit;
 		UE_LOG(LogTemp, Warning, TEXT("WallBuy Interact Message: %s"), *interactable->UIMessage);
-		OnInteractMessageChanged.Broadcast(interactable->UIMessage);
-	}
+		OnInteractMessageChanged.Broadcast(interactable->GetUIMessage(this));
+	} 
 	else if (interactable && tempHit == nullptr)
 	{
 		interactable = nullptr;
@@ -123,7 +123,8 @@ void AZombiesCharacter::AddWeapon(AWeaponsBase* weapon)
 
 void AZombiesCharacter::RemoveWeapon(AWeaponsBase* weapon)
 {
-
+	weapon->Destroy();
+	weaponArray.Remove(weapon);
 }
 
 //Function for Equiping weapon
@@ -184,6 +185,11 @@ FName AZombiesCharacter::GetWeaponAttachPoint() const
 TArray<AWeaponsBase*> AZombiesCharacter::GetWeaponArray()
 {
 	return weaponArray;
+}
+
+AWeaponsBase* AZombiesCharacter::GetCurrentWeapon()
+{
+	return currentWeapon;
 }
 
 int32 AZombiesCharacter::GetMaxWeapons()
