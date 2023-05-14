@@ -86,6 +86,8 @@ public:
 	void OnEquip();
 	void OnUnequip();
 
+	void AddAmmo(int32 ammo, bool includeCurrentMagazine);
+
 protected:
 	virtual void StartCooldown(float time);
 	virtual void EndCooldown();

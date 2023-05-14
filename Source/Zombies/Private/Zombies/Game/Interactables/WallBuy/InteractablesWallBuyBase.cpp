@@ -15,9 +15,11 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
 	if (interactingPlayer->GetWeaponArray().Num() < interactingPlayer->GetMaxWeapons())
 	{
-		if (CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
+		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
 		{
-			
+			ownedWeapon->AddAmmo(500, true);
+
+			interactingPlayer->DecreasePoints(ammoCost);
 		}
 		else
 		{
@@ -32,14 +34,15 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 
 				interactingPlayer->DecreasePoints(cost);
 			}
-
 		}
 	}
 	else if (interactingPlayer->GetWeaponArray().Num() >= interactingPlayer->GetMaxWeapons())
 	{
-		if (CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
+		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
 		{
+			ownedWeapon->AddAmmo(500, true);
 
+			interactingPlayer->DecreasePoints(ammoCost);
 		}
 		else
 		{
@@ -57,7 +60,6 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 
 				interactingPlayer->DecreasePoints(cost);
 			}
-
 		}
 	}
 }
@@ -84,7 +86,7 @@ FString AInteractablesWallBuyBase::GetUIMessage(AZombiesCharacter* interactingPl
 	}
 	else
 	{
-		return UIMessage = "Hold F to buy " + name + " for [Cost " + FString::FromInt(cost) + "]";
+		return UIMessage = "Hold F to buy " + name + " for [ Cost " + FString::FromInt(cost) + " ]";
 	}
 }
 

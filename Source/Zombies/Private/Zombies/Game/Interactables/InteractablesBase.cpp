@@ -26,7 +26,8 @@ FString AInteractablesBase::GetUIMessage(AZombiesCharacter* interactingPlayer)
 void AInteractablesBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UIMessage = UIMessage + name + " for [ Cost " + FString::FromInt(cost) + " ]";
 }
 
 

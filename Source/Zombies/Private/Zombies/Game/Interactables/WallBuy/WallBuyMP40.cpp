@@ -7,7 +7,7 @@ AWallBuyMP40::AWallBuyMP40()
 {
 	name = "MP40";
 	cost = 500;
-	UIMessage = UIMessage + name + " for [Cost " + FString::FromInt(cost) + "]";
+	UIMessage = UIMessage + name + " for [ Cost " + FString::FromInt(cost) + " ]";
 }
 
 void AWallBuyMP40::BeginPlay()

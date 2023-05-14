@@ -26,6 +26,8 @@ void AZombiesCharacter::BeginPlay()
 
 	GetWorld()->GetTimerManager().SetTimer(timerHandle, this, &AZombiesCharacter::FindInteractableObjects, 0.2f, true);
 	
+	OnPointsChanged.Broadcast(points);
+
 	SpawnStartingWeapons();
 
 	UE_LOG(LogTemp, Warning, TEXT("ZombiesCharacter"));

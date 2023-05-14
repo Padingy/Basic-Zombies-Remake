@@ -27,8 +27,10 @@ public:
 
 	FString UIMessage;
 
-	FString name;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+		FString name;
 
-	int32 cost;
+	UPROPERTY(EditAnywhere, Category = "Interact Settings")
+		int32 cost;
 
 };

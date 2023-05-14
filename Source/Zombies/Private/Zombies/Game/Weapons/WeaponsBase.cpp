@@ -119,6 +119,24 @@ void AWeaponsBase::OnUnequip()
 	DetachWeaponFromMesh();
 }
 
+void AWeaponsBase::AddAmmo(int32 ammo, bool includeCurrentMagazine)
+{
+	if (includeCurrentMagazine)
+	{
+		int32 ammoToAddCurrent = FMath::Min(weaponData.magazineSize - currentAmmo, ammo);
+		currentAmmo += ammoToAddCurrent;
+		
+		ammo -= ammoToAddCurrent;
+		currentReserveAmmo += ammo;
+
+		currentReserveAmmo = FMath::Clamp(currentReserveAmmo, 0, weaponData.magazineAmount * weaponData.magazineSize);
+	}
+	else
+	{
+
+	}
+}
+
 void AWeaponsBase::StartCooldown(float time)
 {
 }
