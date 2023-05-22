@@ -7,6 +7,12 @@
 // Sets default values
 AInteractablesBase::AInteractablesBase()
 {
+	boxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponBoxCollider"));
+	boxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	boxCollider->SetHiddenInGame(true);
+	boxCollider->SetupAttachment(RootComponent);
+
+
 	UIMessage = "Hold F to buy ";
 	name = "InteractableBase";
 	cost = 500;

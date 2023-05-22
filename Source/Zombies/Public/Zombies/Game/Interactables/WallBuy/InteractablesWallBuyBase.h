@@ -28,5 +28,26 @@ public:
 	virtual FString GetUIMessage(AZombiesCharacter* interactingPlayer) override;
 
 protected:
+
+	virtual void BeginPlay() override;
+
 	AWeaponsBase* CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray);
+
+protected:
+	UPROPERTY(EditAnywhere)
+		UStaticMeshComponent* weaponStaticMesh;
+
+	UPROPERTY(EditAnywhere)
+		USkeletalMeshComponent* weaponSkeletalMesh;
+
+	FVector animStartLocation;
+	
+	UPROPERTY(EditAnywhere, Category = "Animation Settings")
+		FVector animEndLocation;
+
+	UPROPERTY(EditAnywhere, Category = "Animation Settings")
+		float animSpeed;
+
+	FTimerHandle animTimerHandle;
+
 };

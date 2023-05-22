@@ -45,7 +45,10 @@ void AZombiesCharacter::OnFire()
 //Action bound to input for press input to end fire of current weapon
 void AZombiesCharacter::OnEndFire()
 {
-	currentWeapon->EndFire();
+	if (currentWeapon)
+	{
+		currentWeapon->EndFire();
+	}
 }
 
 //Action bound to input for press input to reload current weapon
@@ -102,16 +105,19 @@ void AZombiesCharacter::SpawnStartingWeapons()
 
 	UE_LOG(LogTemp, Warning, TEXT("NumOfStartingWeapons: %d"), numOfStartingWeapons);
 
-	for (int32 i = 0; i < numOfStartingWeapons; i++)
+	if (startingWeaponClasses.Num() > 0)
 	{
-		FActorSpawnParameters spawnParams;
-		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-		AWeaponsBase* newWeapon = GetWorld()->SpawnActor<AWeaponsBase>(startingWeaponClasses[i], spawnParams);
-		AddWeapon(newWeapon);
-	}
+		for (int32 i = 0; i < numOfStartingWeapons; i++)
+		{
+			FActorSpawnParameters spawnParams;
+			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			AWeaponsBase* newWeapon = GetWorld()->SpawnActor<AWeaponsBase>(startingWeaponClasses[i], spawnParams);
+			AddWeapon(newWeapon);
+		}
 
-	EquipWeapon(weaponArray[0]);
-	weaponIndex = 0;
+		EquipWeapon(weaponArray[0]);
+		weaponIndex = 0;
+	}
 }
 
 //Functions for Adding and Removing weapons to the owner

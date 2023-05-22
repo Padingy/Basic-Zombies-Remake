@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Components/BoxComponent.h"
 #include "InteractablesBase.generated.h"
 
 UCLASS()
@@ -32,5 +33,10 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
 		int32 cost;
+
+protected:
+		
+	UPROPERTY(EditAnywhere)
+		UBoxComponent* boxCollider;
 
 };
