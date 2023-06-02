@@ -7,8 +7,12 @@
 // Sets default values
 AInteractablesBase::AInteractablesBase()
 {
-	boxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("WeaponBoxCollider"));
+	skeletalMeshComp = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("InteractableSkeletalMeshComp"));
+	RootComponent = skeletalMeshComp;
+
+	boxCollider = CreateDefaultSubobject<UBoxComponent>(TEXT("InteractableBoxCollider"));
 	boxCollider->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	boxCollider->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
 	boxCollider->SetHiddenInGame(true);
 	boxCollider->SetupAttachment(RootComponent);
 
@@ -25,7 +29,7 @@ void AInteractablesBase::OnInteract(AZombiesCharacter* interactingPlayer)
 
 FString AInteractablesBase::GetUIMessage(AZombiesCharacter* interactingPlayer)
 {
-	return FString();
+	return UIMessage;
 }
 
 // Called when the game starts or when spawned

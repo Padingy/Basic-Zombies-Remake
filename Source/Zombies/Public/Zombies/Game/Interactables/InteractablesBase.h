@@ -35,7 +35,10 @@ public:
 		int32 cost;
 
 protected:
-		
+	
+	UPROPERTY(EditAnywhere)
+		USkeletalMeshComponent* skeletalMeshComp;
+
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* boxCollider;
 

@@ -7,16 +7,19 @@
 
 AInteractablesWallBuyBase::AInteractablesWallBuyBase()
 {
-	weaponStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WallBuyStaticMesh"));
-	weaponStaticMesh->SetOnlyOwnerSee(false);
-	weaponStaticMesh->bCastDynamicShadow = false;
-	weaponStaticMesh->CastShadow = false;
-	RootComponent = weaponStaticMesh;
+	staticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WallBuyStaticMesh"));
+	staticMeshComp->SetOnlyOwnerSee(false);
+	staticMeshComp->bCastDynamicShadow = false;
+	staticMeshComp->CastShadow = false;
+	RootComponent = staticMeshComp;
 
-	weaponSkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WallBuyWeaponSkeletalMesh"));
-	weaponSkeletalMesh->SetRelativeLocation(FVector(-22.0f, -6.0f, -5.0f));
-	weaponSkeletalMesh->SetHiddenInGame(true);
-	weaponSkeletalMesh->SetupAttachment(RootComponent);
+	skeletalMeshComp->SetupAttachment(RootComponent);
+	skeletalMeshComp->SetRelativeLocation(FVector(-22.0f, -6.0f, -5.0f));
+	skeletalMeshComp->SetHiddenInGame(true);
+
+	boxCollider->SetupAttachment(RootComponent);
+	boxCollider->SetRelativeScale3D(FVector(2.0f, 1.0f, 1.25f));
+	boxCollider->SetRelativeLocation(FVector(-7.0f, 21.0f, 0.0f));
 
 	animSpeed = 25.0f;
 }
@@ -25,15 +28,15 @@ AInteractablesWallBuyBase::AInteractablesWallBuyBase()
 //TODO: Refactor this to put the For loop into its own class.
 void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
-	if (weaponSkeletalMesh->GetRelativeLocation() != animEndLocation)
+	if (skeletalMeshComp->GetRelativeLocation() != animEndLocation)
 	{
-		weaponSkeletalMesh->SetHiddenInGame(false);
+		skeletalMeshComp->SetHiddenInGame(false);
 		GetWorld()->GetTimerManager().SetTimer(animTimerHandle, [this] {
 			UGameInstance* gameInstance = GetGameInstance();
 
-			weaponSkeletalMesh->SetRelativeLocation(FMath::VInterpTo(weaponSkeletalMesh->GetRelativeLocation(), animEndLocation, gameInstance->GetWorld()->GetDeltaSeconds(), animSpeed));
+			skeletalMeshComp->SetRelativeLocation(FMath::VInterpTo(skeletalMeshComp->GetRelativeLocation(), animEndLocation, gameInstance->GetWorld()->GetDeltaSeconds(), animSpeed));
 
-			if (weaponSkeletalMesh->GetRelativeLocation() == animEndLocation)
+			if (skeletalMeshComp->GetRelativeLocation() == animEndLocation)
 			{
 				GetWorld()->GetTimerManager().ClearTimer(animTimerHandle);
 			}
@@ -125,7 +128,7 @@ void AInteractablesWallBuyBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	animStartLocation = weaponSkeletalMesh->GetRelativeLocation();
+	animStartLocation = skeletalMeshComp->GetRelativeLocation();
 }
 
 AWeaponsBase* AInteractablesWallBuyBase::CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray)

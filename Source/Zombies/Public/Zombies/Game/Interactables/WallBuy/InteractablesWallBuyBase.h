@@ -34,11 +34,9 @@ protected:
 	AWeaponsBase* CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray);
 
 protected:
-	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* weaponStaticMesh;
 
 	UPROPERTY(EditAnywhere)
-		USkeletalMeshComponent* weaponSkeletalMesh;
+		UStaticMeshComponent* staticMeshComp;
 
 	FVector animStartLocation;
 	
