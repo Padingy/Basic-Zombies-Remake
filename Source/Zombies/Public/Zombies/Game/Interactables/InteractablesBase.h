@@ -36,7 +36,7 @@ public:
 
 protected:
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		USkeletalMeshComponent* skeletalMeshComp;
 
 	UPROPERTY(EditAnywhere)

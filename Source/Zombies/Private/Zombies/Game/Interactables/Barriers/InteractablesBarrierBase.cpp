@@ -23,11 +23,22 @@ void AInteractablesBarrierBase::OnInteract(AZombiesCharacter* interactingPlayer)
 void AInteractablesBarrierBase::HandleAnimNotify()
 {
 	boxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	this->Destroy();
 }
 
 void AInteractablesBarrierBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AInteractablesBarrierBase::ChangeOpacityValue(float changeValue)
+{
+	if (UMaterialInstanceDynamic* dynamicMaterialInstance = Cast<UMaterialInstanceDynamic>(skeletalMeshComp->GetMaterial(0)))
+	{
+		float currentScalarValue = 0.0f;
+		dynamicMaterialInstance->GetScalarParameterValue(FName(FString("FadeOut")), currentScalarValue);
+
+		dynamicMaterialInstance->SetScalarParameterValue("FadeOut", FMath::Clamp(currentScalarValue + changeValue, 0.0f, 1.0f));
+
+		skeletalMeshComp->SetMaterial(0, dynamicMaterialInstance);
+	}
 }

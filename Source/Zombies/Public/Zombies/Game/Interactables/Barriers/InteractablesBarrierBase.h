@@ -21,8 +21,11 @@ public:
 
 	void HandleAnimNotify();
 
+	void ChangeOpacityValue(float changeValue);
+
 protected:
 	virtual void BeginPlay() override;
+
 
 	UPROPERTY(EditAnywhere)
 		UAnimationAsset* openAnimation;
