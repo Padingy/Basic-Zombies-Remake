@@ -3,6 +3,7 @@
 #include "Zombies/Game/Weapons/WeaponsBase.h"
 #include "Zombies/Public/Player/ZombiesCharacter.h"
 #include "Zombies/Public/Zombie/ZombieBase.h"
+#include "Engine/Engine.h"
 
 // Sets default values
 AWeaponsBase::AWeaponsBase()
@@ -15,31 +16,42 @@ AWeaponsBase::AWeaponsBase()
 
 	RootComponent = weaponSkeletalMesh;
 
+	bWantsToReload = false;
+	bWantsToFire = false;
+
 	weaponState = EWeaponState::Idle;
 }
 
 void AWeaponsBase::Fire()
 {
-	
+
 }
 
 void AWeaponsBase::EndFire()
 {
-	UE_LOG(LogTemp, Warning, TEXT("WeaponBase EndFire"));
+	
 }
 
 void AWeaponsBase::Reload()
 {
-	if (currentReserveAmmo > 0)
+	if (CanReload())
 	{
-		int32 missingAmmo = FMath::Min(weaponData.magazineSize - currentAmmo, (currentAmmo + currentReserveAmmo) - currentAmmo);
+		bWantsToReload = true;
+		DetermineWeaponState();
 
-		currentAmmo += missingAmmo;
+		GetWorld()->GetTimerManager().ClearTimer(cooldownTimerHandle);
 
-		currentReserveAmmo -= missingAmmo;
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString("Reloading Starting"));
+
+		GetWorld()->GetTimerManager().SetTimer(reloadTimerHandle, [this]()
+		{
+			HandleReload();
+			bWantsToReload = false;
+			DetermineWeaponState();
+
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString("Reloading Finished"));
+		}, weaponData.reloadSpeed / weaponOwner->GetReloadSpeedMultiplier(), false);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
-	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);
 }
 
 bool AWeaponsBase::GetInfiniteAmmo() const
@@ -90,6 +102,16 @@ class AZombiesCharacter* AWeaponsBase::GetWeaponOwner() const
 	return weaponOwner;
 }
 
+int32 AWeaponsBase::GetCurrentAmmo()
+{
+	return currentAmmo;
+}
+
+int32 AWeaponsBase::GetReserveAmmo()
+{
+	return currentReserveAmmo;
+}
+
 void AWeaponsBase::AttachWeaponToMesh()
 {
 	if (weaponOwner)
@@ -107,6 +129,11 @@ void AWeaponsBase::DetachWeaponFromMesh()
 {
 	weaponSkeletalMesh->DetachFromComponent(FDetachmentTransformRules::KeepRelativeTransform);
 	weaponSkeletalMesh->SetHiddenInGame(true);
+}
+
+USkeletalMeshComponent* AWeaponsBase::GetMesh()
+{
+	return weaponSkeletalMesh;
 }
 
 void AWeaponsBase::OnEquip()
@@ -133,16 +160,74 @@ void AWeaponsBase::AddAmmo(int32 ammo, bool includeCurrentMagazine)
 	}
 	else
 	{
+		currentReserveAmmo += ammo;
 
+		currentReserveAmmo = FMath::Clamp(currentReserveAmmo, 0, weaponData.magazineAmount * weaponData.magazineSize);
 	}
 }
 
-void AWeaponsBase::StartCooldown(float time)
+void AWeaponsBase::StartFiringCooldown(float time)
 {
 }
 
-void AWeaponsBase::EndCooldown()
+void AWeaponsBase::EndFiringCooldown()
 {
+}
+
+void AWeaponsBase::SetWeaponState(EWeaponState newState)
+{
+	weaponState = newState;
+}
+
+void AWeaponsBase::SetWantsToFire(bool newWantsToFire)
+{
+	bWantsToFire = newWantsToFire;
+	DetermineWeaponState();
+}
+
+bool AWeaponsBase::CanFire()
+{
+	bool bStateCanFire = ((weaponState == EWeaponState::Idle) || (weaponState == EWeaponState::Firing));
+	return ((bStateCanFire) && (bWantsToReload == false));
+}
+
+bool AWeaponsBase::CanReload()
+{
+	bool bHasAmmo = ((currentAmmo < weaponData.magazineSize) && (currentReserveAmmo > 0));
+	bool bStateCanReload = ((weaponState == EWeaponState::Idle) || (weaponState == EWeaponState::Firing));
+	return ((bHasAmmo == true) && (bStateCanReload == true));
+}
+
+void AWeaponsBase::HandleReload()
+{
+	int32 missingAmmo = FMath::Min(weaponData.magazineSize - currentAmmo, (currentAmmo + currentReserveAmmo) - currentAmmo);
+
+	currentAmmo += missingAmmo;
+
+	currentReserveAmmo -= missingAmmo;
+}
+
+void AWeaponsBase::DetermineWeaponState()
+{
+	EWeaponState newState = EWeaponState::Idle;
+
+	if (bWantsToReload)
+	{
+		if (CanReload() == true)
+		{
+			newState = EWeaponState::Reloading;
+		}
+		else
+		{
+			newState = weaponState;
+		}
+	}
+	else if ((bWantsToReload == false) && (bWantsToFire == true) && (CanFire() == true))
+	{
+		newState = EWeaponState::Firing;
+	}
+
+	weaponState = newState;
 }
 
 // Called when the game starts or when spawned

@@ -5,45 +5,44 @@
 
 AWeaponsLineTraceFullAuto::AWeaponsLineTraceFullAuto()
 {
-	bCanFire = true;
+
 }
 
 void AWeaponsLineTraceFullAuto::Fire()
 {
-	if ((weaponState == EWeaponState::Idle || weaponState == EWeaponState::Firing) && !stopFiringTimerHandle.IsValid())
+	if (CanFire() && !stopFiringTimerHandle.IsValid())
 	{
-		weaponState = EWeaponState::Firing;
+		SetWantsToFire(true);
 		Super::Fire();
+
 		if (!cooldownTimerHandle.IsValid())
 		{
-			StartCooldown(weaponData.fireRate);
+			StartFiringCooldown(weaponData.fireRate);
 		}
 	}
 }
 
 void AWeaponsLineTraceFullAuto::EndFire()
 {
-	EndCooldown();
+	EndFiringCooldown();
 }
 
-void AWeaponsLineTraceFullAuto::StartCooldown(float time)
+void AWeaponsLineTraceFullAuto::StartFiringCooldown(float time)
 {
 	GetWorld()->GetTimerManager().SetTimer(cooldownTimerHandle, this, &AWeaponsLineTraceFullAuto::Fire, time, true);
 }
 
-void AWeaponsLineTraceFullAuto::EndCooldown()
+void AWeaponsLineTraceFullAuto::EndFiringCooldown()
 {
-	if (!stopFiringTimerHandle.IsValid())
+	if (!stopFiringTimerHandle.IsValid() && bWantsToReload != true)
 	{
 		float timeRemaining = GetWorld()->GetTimerManager().GetTimerRemaining(cooldownTimerHandle);
 		GetWorld()->GetTimerManager().ClearTimer(cooldownTimerHandle);
 
 		GetWorld()->GetTimerManager().SetTimer(stopFiringTimerHandle, [this]()
 		{
-			weaponState = EWeaponState::Idle;
-			bCanFire = true;
+			SetWantsToFire(false);
 
-			//Clear the timer handle when the timer has fired to make sure that it can not fired off multiple times because of multiple button presses
 			GetWorld()->GetTimerManager().ClearTimer(stopFiringTimerHandle);
 		}, timeRemaining, false);
 	}

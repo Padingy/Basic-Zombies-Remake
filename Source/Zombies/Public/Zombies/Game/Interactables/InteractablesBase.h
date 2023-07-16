@@ -41,5 +41,4 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 		UBoxComponent* boxCollider;
-
 };

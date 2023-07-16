@@ -2,12 +2,15 @@
 
 
 #include "Zombies/Public/Zombie/ZombieBase.h"
-#include "Engine/Engine.h"
 #include "TimerManager.h"
 
 // Sets default values
 AZombieBase::AZombieBase()
 {
+	maxHealth = 100.0f;
+	health = 100.0f;
+
+	despawnTime = 5.0f;
 }
 
 
@@ -15,9 +18,6 @@ AZombieBase::AZombieBase()
 void AZombieBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	maxHealth = 100.0f;
-	health = 100.0f;
 }
 
 void AZombieBase::DestroyActor()
@@ -33,11 +33,6 @@ void AZombieBase::Hit(AZombiesCharacter* attacker, FString hitBone)
 	UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %d"), attacker->GetPoints());
 
 	FString pointsMessage = "Points: " + FString::FromInt(attacker->GetPoints());
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, pointsMessage);
-
-
-	//DecreaseHealth(50.0f);
 }
 
 void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
@@ -314,4 +309,46 @@ bool AZombieBase::DecreaseHealth(float value)
 float AZombieBase::GetHealth()
 {
 	return health;
+}
+
+float AZombieBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float actualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	UE_LOG(LogTemp, Warning, TEXT("ActualDamage: %f"), actualDamage);
+
+	if (actualDamage > 0.0f)
+	{
+		health -= actualDamage;
+
+		if (health <= 0.0f)
+		{
+			Die();
+		}
+		else
+		{
+			//Deal with HUD stuff when HUD class is made in the future
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Zombie Health: %f"), health);
+	return actualDamage;
+}
+
+void AZombieBase::Die()
+{
+	if (GetMesh())
+	{
+		static FName CollisionProfileName(TEXT("Ragdoll"));
+		GetMesh()->SetCollisionProfileName(CollisionProfileName);
+	}
+	SetActorEnableCollision(true);
+
+	GetMesh()->SetSimulatePhysics(true);
+
+	FTimerHandle despawnTimer;
+	GetWorld()->GetTimerManager().SetTimer(despawnTimer, [this]
+	{
+		this->Destroy();
+	}, despawnTime, false);
 }

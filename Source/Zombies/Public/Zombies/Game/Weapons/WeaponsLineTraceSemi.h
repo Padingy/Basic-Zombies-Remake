@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	virtual void StartCooldown(float time) override;
-	virtual void EndCooldown() override;
+	virtual void StartFiringCooldown(float time) override;
+	virtual void EndFiringCooldown() override;
 
 };

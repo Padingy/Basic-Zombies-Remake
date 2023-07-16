@@ -5,27 +5,26 @@
 
 AWeaponsLineTraceSemi::AWeaponsLineTraceSemi()
 {
-	bCanFire = true;
+
 }
 
 void AWeaponsLineTraceSemi::Fire()
 {
-	//if (bCanFire == true)
 	if (weaponState == EWeaponState::Idle)
 	{
+		SetWantsToFire(true);
+
 		Super::Fire();
-		StartCooldown(weaponData.fireRate);
+		StartFiringCooldown(weaponData.fireRate);
 	}
 }
 
-void AWeaponsLineTraceSemi::StartCooldown(float time)
+void AWeaponsLineTraceSemi::StartFiringCooldown(float time)
 {
-	GetWorld()->GetTimerManager().SetTimer(cooldownTimerHandle, this, &AWeaponsLineTraceSemi::EndCooldown, time, false);
-	weaponState = EWeaponState::Firing;
+	GetWorld()->GetTimerManager().SetTimer(cooldownTimerHandle, this, &AWeaponsLineTraceSemi::EndFiringCooldown, time, false);
 }
 
-void AWeaponsLineTraceSemi::EndCooldown()
+void AWeaponsLineTraceSemi::EndFiringCooldown()
 {
-	weaponState = EWeaponState::Idle;
-	UE_LOG(LogTemp, Warning, TEXT("CanFire == True"));
+	SetWantsToFire(false);
 }

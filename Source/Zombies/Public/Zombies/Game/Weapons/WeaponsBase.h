@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "WeaponsBase.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAmmoChanged, int32, currentAmmo);
+
 class AZombiesCharacter;
 
 UENUM()
@@ -20,7 +22,6 @@ enum class EWeaponState
 USTRUCT()
 struct FWeaponData
 {
-
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Data")
@@ -38,6 +39,8 @@ struct FWeaponData
 	UPROPERTY(EditAnywhere, Category = "Weapon Data")
 	float fireRate;
 
+	UPROPERTY(EditAnywhere, Category = "Weapon Data")
+	float reloadSpeed;
 
 	//Default
 	FWeaponData()
@@ -47,6 +50,7 @@ struct FWeaponData
 		magazineSize = 30;
 		magazineAmount = 7;
 		fireRate = 0.2f;
+		reloadSpeed = 0.5f;
 	}
 };
 
@@ -78,10 +82,18 @@ public:
 	class AZombiesCharacter* GetWeaponOwner() const;
 
 	UFUNCTION(BlueprintCallable)
+		int32 GetCurrentAmmo();
+	
+	UFUNCTION(BlueprintCallable)
+		int32 GetReserveAmmo();
+
+	UFUNCTION(BlueprintCallable)
 		void AttachWeaponToMesh();
 
 	UFUNCTION(BlueprintCallable)
 		void DetachWeaponFromMesh();
+
+	USkeletalMeshComponent* GetMesh();
 
 	void OnEquip();
 	void OnUnequip();
@@ -89,8 +101,19 @@ public:
 	void AddAmmo(int32 ammo, bool includeCurrentMagazine);
 
 protected:
-	virtual void StartCooldown(float time);
-	virtual void EndCooldown();
+	virtual void StartFiringCooldown(float time);
+	virtual void EndFiringCooldown();
+
+	void SetWeaponState(EWeaponState newState);
+
+	void SetWantsToFire(bool newWantsToFire);
+	
+	bool CanFire();
+	bool CanReload();
+
+	void HandleReload();
+
+	void DetermineWeaponState();
 
 protected:
 	// Called when the game starts or when spawned
@@ -113,7 +136,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Ammo, meta = (ToolTip = "The total amount of ammo left. This is also used for the starting amount of total bullets when spawned"))
 		int32 currentReserveAmmo; //Ammo in Magazine + reserve magaizines & Starting Ammo
 
-	FTimerHandle cooldownTimerHandle;
-	bool bCanFire;
+	UPROPERTY(BlueprintAssignable)
+		FAmmoChanged OnAmmoChanged;
 
+	FTimerHandle cooldownTimerHandle;
+	FTimerHandle reloadTimerHandle;
+
+	bool bWantsToReload;
+	bool bWantsToFire;
 };

@@ -27,11 +27,14 @@ protected:
 
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Stats)
 		float maxHealth;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = Stats)
 		float health;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+		float despawnTime;
 
 public:	
 
@@ -41,4 +44,7 @@ public:
 	bool DecreaseHealth(float value);
 	float GetHealth();
 
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
+
+	void Die();
 };

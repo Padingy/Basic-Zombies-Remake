@@ -16,7 +16,6 @@ AInteractablesBase::AInteractablesBase()
 	boxCollider->SetHiddenInGame(true);
 	boxCollider->SetupAttachment(RootComponent);
 
-
 	UIMessage = "Hold F to buy ";
 	name = "InteractableBase";
 	cost = 500;

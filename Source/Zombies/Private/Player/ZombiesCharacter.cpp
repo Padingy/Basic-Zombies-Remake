@@ -29,8 +29,6 @@ void AZombiesCharacter::BeginPlay()
 	OnPointsChanged.Broadcast(points);
 
 	SpawnStartingWeapons();
-
-	UE_LOG(LogTemp, Warning, TEXT("ZombiesCharacter"));
 }
 
 //Action bound to input for press input to fire current weapon
@@ -168,16 +166,96 @@ void AZombiesCharacter::SetCurrentWeapon(AWeaponsBase* newWeapon)
 	}
 }
 
-void AZombiesCharacter::IncreasePoints(int value)
+void AZombiesCharacter::IncreasePoints(int increaseValue)
 {
-	points += value;
+	points += increaseValue;
 	OnPointsChanged.Broadcast(points);
 }
 
-void AZombiesCharacter::DecreasePoints(int value)
+void AZombiesCharacter::DecreasePoints(int decreaseValue)
 {
-	points -= value;
+	points -= decreaseValue;
 	OnPointsChanged.Broadcast(points);
+}
+
+void AZombiesCharacter::Heal()
+{
+}
+
+float AZombiesCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	float actualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
+
+	UE_LOG(LogTemp, Warning, TEXT("ActualDamage: %f"), actualDamage);
+
+	if (actualDamage > 0.0f)
+	{
+		playerData.health -= actualDamage;
+
+		if (playerData.health <= 0.0f)
+		{
+			Die();
+		}
+		else
+		{
+			//Deal with HUD stuff when HUD class is made in the future
+		}
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Player Health: %f"), playerData.health);
+	return actualDamage;
+}
+
+void AZombiesCharacter::Die()
+{
+	if (GetMesh())
+	{
+		static FName CollisionProfileName(TEXT("Ragdoll"));
+		GetMesh()->SetCollisionProfileName(CollisionProfileName);
+	}
+	SetActorEnableCollision(true);
+
+	GetMesh()->SetSimulatePhysics(true);
+
+	Mesh1P->DestroyComponent();
+	currentWeapon->Destroy();
+
+	Controller->UnPossess();
+}
+
+void AZombiesCharacter::IncreaseHealth(float increaseValue)
+{
+	playerData.health = FMath::Clamp(playerData.health += increaseValue, 0.0f, playerData.maxHealth);
+}
+
+void AZombiesCharacter::DecreaseHealth(float decreaseValue)
+{
+	playerData.health = FMath::Clamp(playerData.health -= decreaseValue, 0.0f, playerData.maxHealth);
+}
+
+void AZombiesCharacter::SetMaxHealth(float newMaxHealth)
+{
+	playerData.maxHealth = newMaxHealth;
+}
+
+void AZombiesCharacter::SetReloadSpeedModifier(float newReloadSpeed)
+{
+	playerData.reloadSpeedMultiplier = newReloadSpeed;
+}
+
+float AZombiesCharacter::GetMaxHealth()
+{
+	return playerData.maxHealth;
+}
+
+float AZombiesCharacter::GetHealth()
+{
+	return playerData.health;
+}
+
+float AZombiesCharacter::GetReloadSpeedMultiplier()
+{
+	return playerData.reloadSpeedMultiplier;
 }
 
 int32 AZombiesCharacter::GetPoints()

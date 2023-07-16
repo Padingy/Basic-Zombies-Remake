@@ -13,6 +13,28 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInteractMessageChanged, FString, me
 
 class UCameraComponent;
 
+USTRUCT()
+struct FPlayerData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Player Data")
+		float maxHealth;
+
+	UPROPERTY(EditAnywhere, Category = "Player Data")
+		float health;
+
+	UPROPERTY(EditAnywhere, Category = "Player Data")
+		float reloadSpeedMultiplier;
+
+	FPlayerData()
+	{
+		maxHealth = 100.0f;
+		health = 100.0f;
+		reloadSpeedMultiplier = 1.0f;
+	}
+};
+
 UCLASS()
 class ZOMBIES_API AZombiesCharacter : public ACharacterBase
 {
@@ -43,24 +65,41 @@ protected:
 	void OnNextWeapon();
 	void OnPrevWeapon();
 
+	void IncreaseHealth(float increaseValue);
+	void DecreaseHealth(float decreaseValue);
+
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
 
 	//Points
-	void IncreasePoints(int value);
+	void IncreasePoints(int increaseValue);
 
-	void DecreasePoints(int value);
+	void DecreasePoints(int decreaseValue);
+
+	void Heal();
+	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
+
+	void Die();
+
+	void SetMaxHealth(float newMaxHealth);
+	void SetReloadSpeedModifier(float newReloadSpeed);
+
+	float GetMaxHealth();
+	float GetHealth();
+	float GetReloadSpeedMultiplier();
 
 	int32 GetPoints();
+
 
 	//Weapons
 	FName GetWeaponAttachPoint() const;
 
 	TArray<AWeaponsBase*> GetWeaponArray();
 
-	AWeaponsBase* GetCurrentWeapon();
+	UFUNCTION(BlueprintCallable)
+		AWeaponsBase* GetCurrentWeapon();
 
 	int32 GetMaxWeapons();
 
@@ -80,6 +119,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Interact Settings")
 		float interactDistance;
+
+	UPROPERTY(EditAnywhere, Category = Config)
+		FPlayerData playerData;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Settings")
 		TArray<TSubclassOf<class AWeaponsBase>> startingWeaponClasses;

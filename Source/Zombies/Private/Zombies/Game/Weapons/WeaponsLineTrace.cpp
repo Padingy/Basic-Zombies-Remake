@@ -15,53 +15,66 @@ void AWeaponsLineTrace::Fire()
 {
 	if (currentAmmo > 0)
 	{
-		TArray<FHitResult>hitResults = PerformLineTrace(2000.0f);
+		UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
 
-		if (hitResults.Num() != 0)
-		{
-			for (FHitResult hit : hitResults)
-			{
-				if (AZombieBase* zombie = Cast<AZombieBase>(hit.GetActor()))
-				{
-					FString hitBone = hit.BoneName.ToString();
+		FVector startLoc = cameraComponent->GetComponentLocation();
+		FVector rot = cameraComponent->GetComponentRotation().Vector();
+		FVector endLoc = startLoc + rot * 2000.0f;
+		FVector shootDir = endLoc - startLoc;
 
-					zombie->Hit(weaponOwner, hitBone);
+		TArray<FHitResult>hitResults = PerformLineTrace(startLoc, endLoc);
 
-					UE_LOG(LogTemp, Warning, TEXT("Shot Hit on Channel: %s"), *zombie->GetName());
-
-					UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
-				}
-			}
-		}
+		DealWithHits(hitResults, shootDir);
 
 		if (!weaponData.bInfiniteAmmo)
+		{
 			currentAmmo--;
+		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
 	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);
 
 }
 
-TArray<FHitResult> AWeaponsLineTrace::PerformLineTrace(float distance)
+TArray<FHitResult> AWeaponsLineTrace::PerformLineTrace(FVector startLoc, FVector Endloc)
 {
-	AActor* owner = GetOwner();
-	UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
-
-	//FVector start = GetFirstPersonCameraComponent()->GetComponentLocation();
-	FVector start = cameraComponent->GetComponentLocation();
-	//FVector rot = GetFirstPersonCameraComponent()->GetComponentRotation().Vector();
-	FVector rot = cameraComponent->GetComponentRotation().Vector();
-	FVector end = start + rot * distance;
-
 	FCollisionQueryParams collisionQuery;
 	FCollisionResponseParams collisionResponse;
 	collisionQuery.AddIgnoredActor(this);
 
-	DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2.0f, 0.0f, 1.0f);
+	DrawDebugLine(GetWorld(), startLoc, Endloc, FColor::Red, false, 2.0f, 0.0f, 1.0f);
 
 	TArray<FHitResult>hitResults;
 
-	GetWorld()->LineTraceMultiByChannel(hitResults, start, end, ECollisionChannel::ECC_GameTraceChannel2, collisionQuery, collisionResponse);
+	GetWorld()->LineTraceMultiByChannel(hitResults, startLoc, Endloc, ECollisionChannel::ECC_GameTraceChannel2, collisionQuery, collisionResponse);
 
 	return hitResults;
+}
+
+void AWeaponsLineTrace::DealWithHits(TArray<FHitResult>& hitResults, FVector& shootDir)
+{
+	if (hitResults.Num() != 0)
+	{
+		for (FHitResult hit : hitResults)
+		{
+			if (AZombieBase* zombie = Cast<AZombieBase>(hit.GetActor()))
+			{
+				FString hitBone = hit.BoneName.ToString();
+
+				zombie->Hit(weaponOwner, hitBone);
+				DealDamage(weaponData.damage, hit, shootDir);
+
+				UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
+			}
+		}
+	}
+}
+
+void AWeaponsLineTrace::DealDamage(float damage, FHitResult& hitActor, FVector& shootDir)
+{
+	FPointDamageEvent damageEvent;
+	damageEvent.Damage = weaponData.damage;
+	damageEvent.ShotDirection = shootDir;
+
+	hitActor.GetActor()->TakeDamage(damage, damageEvent, weaponOwner->Controller, this);
 }

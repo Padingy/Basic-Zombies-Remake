@@ -28,6 +28,7 @@ AInteractablesWallBuyBase::AInteractablesWallBuyBase()
 //TODO: Refactor this to put the For loop into its own class.
 void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
+	Super::OnInteract(interactingPlayer);
 	if (skeletalMeshComp->GetRelativeLocation() != animEndLocation)
 	{
 		skeletalMeshComp->SetHiddenInGame(false);

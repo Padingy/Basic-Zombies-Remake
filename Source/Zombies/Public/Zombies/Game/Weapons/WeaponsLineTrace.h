@@ -19,5 +19,7 @@ public:
 	
 	virtual void Fire() override;
 
-	TArray<FHitResult> PerformLineTrace(float distance);
+	TArray<FHitResult> PerformLineTrace(FVector startLoc, FVector Endloc);
+	void DealWithHits(TArray<FHitResult>& hitResults, FVector& shootDir);
+	void DealDamage(float damage, FHitResult& hitActor, FVector& shootDir);
 };
