@@ -2,6 +2,7 @@
 
 
 #include "Zombies/Public/Zombie/ZombieBase.h"
+#include "Zombies/Public/Zombies/Game/ZombiesCustomGameMode.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -337,6 +338,14 @@ float AZombieBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACo
 
 void AZombieBase::Die()
 {
+	AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
+	if (gameMode)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("GameMode is fine"));
+		gameMode->DecreaseRemainingMobs(1);
+		gameMode->CheckRoundStatus();
+	}
+
 	if (GetMesh())
 	{
 		static FName CollisionProfileName(TEXT("Ragdoll"));

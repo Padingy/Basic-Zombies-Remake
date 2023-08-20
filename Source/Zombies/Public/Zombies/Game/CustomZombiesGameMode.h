@@ -14,6 +14,11 @@ class ZOMBIES_API ACustomZombiesGameMode : public AGameModeBase
 public:
 	ACustomZombiesGameMode();
 
+	void StartRound(int32 newRound);
+	void EndRound();
+
+	void CheckRoundStatus();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -21,7 +26,6 @@ protected:
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 
 	void SetPlayerSpawns();
-	void SetZombieSpawns();
 
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 		TSubclassOf<class AZombiesCharacter> playerClass;
@@ -33,4 +37,8 @@ protected:
 	TArray<class AZombieSpawnPoint*> ZombieSpawnPoints;
 	bool playerSpawnsSet;
 
+	int32 currentRound;
+	int32 totalMobsInRound;
+	uint32_t mobsLeftToSpawn;
+	int32 numOfMobsSpawned;
 };

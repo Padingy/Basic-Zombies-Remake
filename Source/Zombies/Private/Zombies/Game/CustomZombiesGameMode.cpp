@@ -2,6 +2,7 @@
 
 
 #include "Zombies/Public/Zombies/Game/CustomZombiesGameMode.h"
+#include "Zombies/Public/Zombies/Game/ZombiesCustomGameState.h"
 #include "Zombies/Public/Zombies/Game/PlayerSpawnPoint.h"
 #include "Zombies/Public/Zombies/Game/ZombieSpawnPoint.h"
 #include "Zombies/Public/Player/ZombiesCharacter.h"
@@ -17,6 +18,11 @@ ACustomZombiesGameMode::ACustomZombiesGameMode()
 	DefaultPawnClass = PlayerPawnClassFinder.Class;
 
 	playerSpawnsSet = false;
+
+	currentRound = 1;
+	totalMobsInRound = currentRound * 8;
+	mobsLeftToSpawn = currentRound * 8; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
+	numOfMobsSpawned = 0;
 }
 
 void ACustomZombiesGameMode::BeginPlay()
@@ -88,7 +94,34 @@ void ACustomZombiesGameMode::SetPlayerSpawns()
 	playerSpawnsSet = true;
 }
 
-void ACustomZombiesGameMode::SetZombieSpawns()
+void ACustomZombiesGameMode::StartRound(int32 newRound)
 {
+	currentRound = newRound;
+	totalMobsInRound = currentRound * 8;
+	mobsLeftToSpawn = totalMobsInRound;
+	numOfMobsSpawned = 0;
+
+	UE_LOG(LogTemp, Warning, TEXT("Current Round: %d"), currentRound);
+}
+
+void ACustomZombiesGameMode::EndRound()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Temp"));
+}
+
+void ACustomZombiesGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMobsInRound to satart a new round
+{
+	AZombiesCustomGameState* const gameState = Cast<AZombiesCustomGameState>(GameState);
 	
+	if (mobsLeftToSpawn >= 0)
+	{
+
+	}
+	else //No Mobs left to spawn in  current round
+	{
+		if (gameState->mobsKilledInRound >= totalMobsInRound)
+		{
+			StartRound(currentRound + 1);
+		}
+	}
 }
