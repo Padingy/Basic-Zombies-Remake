@@ -19,10 +19,10 @@ AZombiesCustomGameMode::AZombiesCustomGameMode()
 	playerSpawnsSet = false;
 
 	currentRound = 1;
-	totalMobsInRound = currentRound * 8;
-	mobsLeftToSpawn = currentRound * 8; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
+	totalMobsInRound = currentRound;
+	mobsLeftToSpawn = totalMobsInRound; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
 	numOfMobsSpawned = 0;
-	mobsRemainingToKill = 1;
+	mobsRemainingToKill = totalMobsInRound;
 
 	changingRoundTime = 3.0f;
 }
@@ -65,17 +65,18 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 		}
 	}
 
-	for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
-	{
-		if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
-		{
-			FVector spawnLocation = spawnPoint->GetActorLocation();
-			if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
-			{
-				spawnPoint->SetIsUsed(true);
-			}
-		}
-	}
+	StartSpawningMobs();
+	//for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
+	//{
+	//	if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
+	//	{
+	//		FVector spawnLocation = spawnPoint->GetActorLocation();
+	//		if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+	//		{
+	//			spawnPoint->SetIsUsed(true);
+	//		}
+	//	}
+	//}
 }
 
 void AZombiesCustomGameMode::SetPlayerSpawns()
@@ -94,7 +95,29 @@ void AZombiesCustomGameMode::SetPlayerSpawns()
 
 void AZombiesCustomGameMode::StartSpawningMobs()
 {
-
+	while (mobsLeftToSpawn > 0)
+	{
+		for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
+		{
+			if (mobsLeftToSpawn > 0)
+			{
+				if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
+				{
+					FVector spawnLocation = spawnPoint->GetActorLocation();
+					if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+					{
+						spawnPoint->SetIsUsed(false);
+						mobsLeftToSpawn--;
+						numOfMobsSpawned++;
+					}
+				}
+			}
+			else
+			{
+				break;
+			}
+		}
+	}
 }
 
 void AZombiesCustomGameMode::StartNewRound(int32 newRound)
@@ -106,11 +129,11 @@ void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 	GetWorld()->GetTimerManager().SetTimer(changingRoundTimer, [this, newRound]()
 	{
 		currentRound = newRound;
-		totalMobsInRound = currentRound * 8;
+		totalMobsInRound = currentRound + 1;
 		mobsRemainingToKill = totalMobsInRound;
 		mobsLeftToSpawn = totalMobsInRound;
 
-		//StartSpawningMobs();
+		StartSpawningMobs();
 	}, changingRoundTime, false);
 
 	UE_LOG(LogTemp, Warning, TEXT("CurrentRound: %d"), currentRound);
@@ -131,17 +154,17 @@ void AZombiesCustomGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMo
 		StartNewRound(currentRound + 1);
 	}
 
-	if (mobsLeftToSpawn >= 0)
-	{
+	//if (mobsLeftToSpawn >= 0)
+	//{
 
-	}
-	else //No Mobs left to spawn in  current round
-	{
-		if (mobsRemainingToKill <= 0)
-		{
-			StartNewRound(currentRound + 1);
-		}
-	}
+	//}
+	//else //No Mobs left to spawn in  current round
+	//{
+	//	if (mobsRemainingToKill <= 0)
+	//	{
+	//		StartNewRound(currentRound + 1);
+	//	}
+	//}
 }
 
 void AZombiesCustomGameMode::DecreaseRemainingMobs(int32 decrementValue)
