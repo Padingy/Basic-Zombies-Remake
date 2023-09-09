@@ -54,6 +54,8 @@ protected:
 	int32 numOfMobsSpawned;
 	int32 mobsRemainingToKill;
 
+	FTimerHandle spawningMobsTimerHandle;
+
 	UPROPERTY(EditAnywhere, Category = Timers)
 		float changingRoundTime;
 };
