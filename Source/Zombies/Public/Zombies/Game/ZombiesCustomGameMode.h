@@ -21,7 +21,7 @@ public:
 	void EndRound();
 
 	void CheckRoundStatus();
-	void DecreaseRemainingMobs(int32 decrementValue);
+	void DecreaseRemainingMobs();
 
 	UFUNCTION()
 		int32 GetCurrentRound();
@@ -53,6 +53,12 @@ protected:
 	int32 mobsLeftToSpawn;
 	int32 numOfMobsSpawned;
 	int32 mobsRemainingToKill;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning Config")
+		int32 maxMobsSpawned;
+
+	UPROPERTY(EditAnywhere, Category = "Spawning Config")
+		int32 mobsSpawnedPerIteration;
 
 	FTimerHandle spawningMobsTimerHandle;
 

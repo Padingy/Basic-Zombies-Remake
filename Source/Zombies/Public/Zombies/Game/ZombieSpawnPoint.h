@@ -18,9 +18,14 @@ public:
 	AZombieSpawnPoint();
 
 protected:
+
+	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
+		float resetTime;
+
 	bool isUsed;
 
 public:
 	bool GetIsUsed();
 	void SetIsUsed(bool value);
+	void TempSetIsUsed(bool value);
 };

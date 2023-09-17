@@ -342,7 +342,7 @@ void AZombieBase::Die()
 	if (gameMode)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("GameMode is fine"));
-		gameMode->DecreaseRemainingMobs(1);
+		gameMode->DecreaseRemainingMobs();
 		gameMode->CheckRoundStatus();
 	}
 

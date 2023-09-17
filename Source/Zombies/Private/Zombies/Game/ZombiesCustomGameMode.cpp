@@ -23,6 +23,8 @@ AZombiesCustomGameMode::AZombiesCustomGameMode()
 	mobsLeftToSpawn = totalMobsInRound; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
 	numOfMobsSpawned = 0;
 	mobsRemainingToKill = totalMobsInRound;
+	maxMobsSpawned = 5;
+	mobsSpawnedPerIteration = 3;
 
 	changingRoundTime = 3.0f;
 }
@@ -98,16 +100,30 @@ void AZombiesCustomGameMode::StartSpawningMobs()
 	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, [this]()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Mobs Left to spawn: %d"), mobsLeftToSpawn);
-		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < 5)
+		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
 		{
-			AZombieSpawnPoint* randSpointPoint = ZombieSpawnPoints[FMath::RandRange(0, ZombieSpawnPoints.Num() - 1)];
+			int32 mobsToSpawn = FMath::Min(FMath::Min(maxMobsSpawned - numOfMobsSpawned, mobsSpawnedPerIteration), mobsLeftToSpawn);
 
-			FVector spawnLocation = randSpointPoint->GetActorLocation();
-			if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+			UE_LOG(LogTemp, Warning, TEXT("MobsToSpawn: %d"), mobsToSpawn);
+
+			for (int i = 0; i < mobsToSpawn; i++)
 			{
-				mobsLeftToSpawn--;
-				numOfMobsSpawned++;
+				AZombieSpawnPoint* randSpointPoint = ZombieSpawnPoints[FMath::RandRange(0, ZombieSpawnPoints.Num() - 1)];
+
+				if (!randSpointPoint->GetIsUsed())
+				{
+					FVector spawnLocation = randSpointPoint->GetActorLocation();
+					if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+					{
+						mobsLeftToSpawn--;
+						numOfMobsSpawned++;
+
+						randSpointPoint->TempSetIsUsed(true);
+					}
+				}
 			}
+
+			
 		}
 		else if (mobsLeftToSpawn <= 0)
 		{
@@ -165,10 +181,10 @@ void AZombiesCustomGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMo
 	//}
 }
 
-void AZombiesCustomGameMode::DecreaseRemainingMobs(int32 decrementValue)
+void AZombiesCustomGameMode::DecreaseRemainingMobs()
 {
-	mobsRemainingToKill -= decrementValue;
-	numOfMobsSpawned -= decrementValue;
+	mobsRemainingToKill -= 1;
+	numOfMobsSpawned -= 1;
 }
 
 int32 AZombiesCustomGameMode::GetCurrentRound()
