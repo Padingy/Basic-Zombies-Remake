@@ -3,19 +3,25 @@
 
 #include "Zombies/Game/Interactables/Barriers/InteractablesBarrierBase.h"
 #include "Zombies/Public/Player/ZombiesCharacter.h"
+#include "Zombies/Game/ZombiesCustomGameMode.h"
 
 AInteractablesBarrierBase::AInteractablesBarrierBase()
 {
-
+	spawnZone1 = 0;
+	spawnZone2 = 1;
 }
 
 void AInteractablesBarrierBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
 	if (interactingPlayer->GetPoints() >= cost)
 	{
+		AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
+		
 		skeletalMeshComp->PlayAnimation(openAnimation, false);
 
 		interactingPlayer->DecreasePoints(cost);
+
+		gameMode->UpdateSpawnPoints(this);
 	}
 }
 
@@ -41,4 +47,14 @@ void AInteractablesBarrierBase::ChangeOpacityValue(float changeValue)
 
 		skeletalMeshComp->SetMaterial(0, dynamicMaterialInstance);
 	}
+}
+
+int32 AInteractablesBarrierBase::GetSpawnZone1()
+{
+	return spawnZone1;
+}
+
+int32 AInteractablesBarrierBase::GetSpawnZone2()
+{
+	return spawnZone2;
 }

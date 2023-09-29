@@ -64,21 +64,14 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
 		{
 			ZombieSpawnPoints.Add(spawnPoint);
+			if (spawnPoint->GetZone() == 0)
+			{
+				activeZombieSpawnPoints.Add(spawnPoint);
+			}
 		}
 	}
 
 	StartSpawningMobs();
-	//for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
-	//{
-	//	if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
-	//	{
-	//		FVector spawnLocation = spawnPoint->GetActorLocation();
-	//		if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
-	//		{
-	//			spawnPoint->SetIsUsed(true);
-	//		}
-	//	}
-	//}
 }
 
 void AZombiesCustomGameMode::SetPlayerSpawns()
@@ -108,7 +101,7 @@ void AZombiesCustomGameMode::StartSpawningMobs()
 
 			for (int i = 0; i < mobsToSpawn; i++)
 			{
-				AZombieSpawnPoint* randSpointPoint = ZombieSpawnPoints[FMath::RandRange(0, ZombieSpawnPoints.Num() - 1)];
+				AZombieSpawnPoint* randSpointPoint = activeZombieSpawnPoints[FMath::RandRange(0, activeZombieSpawnPoints.Num() - 1)];
 
 				if (!randSpointPoint->GetIsUsed())
 				{
@@ -158,6 +151,20 @@ void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 void AZombiesCustomGameMode::EndRound()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Temp"));
+}
+
+void AZombiesCustomGameMode::UpdateSpawnPoints(AInteractablesBarrierBase* zoneActivator)
+{
+	if (zoneActivator)
+	{
+		for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
+		{
+			if (spawnPoint->GetZone() == zoneActivator->GetSpawnZone1() || spawnPoint->GetZone() == zoneActivator->GetSpawnZone2())
+			{
+				activeZombieSpawnPoints.AddUnique(spawnPoint);
+			}
+		}
+	}
 }
 
 void AZombiesCustomGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMobsInRound to satart a new round

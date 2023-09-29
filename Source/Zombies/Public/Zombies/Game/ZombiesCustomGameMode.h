@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameMode.h"
+#include "Zombies/Public/Zombies/Game/Interactables/Barriers/InteractablesBarrierBase.h"
 #include "ZombiesCustomGameMode.generated.h"
 
 /**
@@ -19,6 +20,8 @@ public:
 
 	void StartNewRound(int32 newRound);
 	void EndRound();
+
+	void UpdateSpawnPoints(AInteractablesBarrierBase* zoneActivator);
 
 	void CheckRoundStatus();
 	void DecreaseRemainingMobs();
@@ -47,6 +50,8 @@ protected:
 
 	TArray<class APlayerSpawnPoint*> PlayerSpawnPoints;
 	TArray<class AZombieSpawnPoint*> ZombieSpawnPoints;
+	TArray<class AZombieSpawnPoint*> activeZombieSpawnPoints;
+
 	bool playerSpawnsSet;
 
 	int32 totalMobsInRound;
