@@ -25,9 +25,9 @@ void AZombieSpawnPoint::TempSetIsUsed(bool value)
 
 	FTimerHandle spawnPointTimerHandle;
 
-	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, [this]()
+	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, [this, value]()
 	{
-		if (isUsed == true)
+		if (value == true)
 		{
 			isUsed = false;
 		}
@@ -37,9 +37,4 @@ void AZombieSpawnPoint::TempSetIsUsed(bool value)
 		}
 
 	}, resetTime, false);
-}
-
-int32 AZombieSpawnPoint::GetZone()
-{
-	return spawnZone;
 }

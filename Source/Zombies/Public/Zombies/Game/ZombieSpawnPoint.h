@@ -22,16 +22,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
 		float resetTime;
 
-	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
-		int32 spawnZone;
-
 	bool isUsed;
-
-	
 
 public:
 	bool GetIsUsed();
 	void SetIsUsed(bool value);
 	void TempSetIsUsed(bool value);
-	int32 GetZone();
 };

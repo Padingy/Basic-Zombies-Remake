@@ -3,38 +3,26 @@
 
 #include "Zombies/Game/Interactables/Barriers/InteractablesBarrierBase.h"
 #include "Zombies/Public/Player/ZombiesCharacter.h"
-#include "Zombies/Public/Zombies/Game/ZombiesCustomGameMode.h"
 
 AInteractablesBarrierBase::AInteractablesBarrierBase()
 {
-	spawnZone1 = 0;
-	spawnZone2 = 1;
+
 }
 
 void AInteractablesBarrierBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
-	
 	if (interactingPlayer->GetPoints() >= cost)
 	{
-		AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
-
 		skeletalMeshComp->PlayAnimation(openAnimation, false);
 
 		interactingPlayer->DecreasePoints(cost);
-
-		gameMode->UpdateSpawnPoints(this);
-
 	}
 }
 
 //Used on the AnimationNotify to remove collisions after the animation is finished
 void AInteractablesBarrierBase::HandleAnimNotify()
 {
-	
 	boxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	skeletalMeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	UE_LOG(LogTemp, Warning, TEXT("HandleAnimNotify"));
 }
 
 void AInteractablesBarrierBase::BeginPlay()
@@ -53,14 +41,4 @@ void AInteractablesBarrierBase::ChangeOpacityValue(float changeValue)
 
 		skeletalMeshComp->SetMaterial(0, dynamicMaterialInstance);
 	}
-}
-
-int32 AInteractablesBarrierBase::GetZone1()
-{
-	return spawnZone1;
-}
-
-int32 AInteractablesBarrierBase::GetZone2()
-{
-	return spawnZone2;
 }

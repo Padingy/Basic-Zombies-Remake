@@ -23,17 +23,10 @@ public:
 
 	void ChangeOpacityValue(float changeValue);
 
-	int32 GetZone1();
-	int32 GetZone2();
-
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
-		int32 spawnZone1;
-
-	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
-		int32 spawnZone2;
+	
 
 	UPROPERTY(EditAnywhere)
 		UAnimationAsset* openAnimation;
