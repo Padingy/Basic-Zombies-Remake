@@ -39,6 +39,22 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 {
 	Super::PostLogin(NewPlayer);
 
+	TArray<AActor*> tempZombieSpawns;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AZombieSpawnPoint::StaticClass(), tempZombieSpawns);
+	for (AActor* actor : tempZombieSpawns)
+	{
+		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
+		{
+			ZombieSpawnPoints.Add(spawnPoint);
+
+			if (spawnPoint->GetZone() == 0)
+			{
+				activeZombieSpawnPoints.Add(spawnPoint);
+				UE_LOG(LogTemp, Warning, TEXT("activeZombieSpawnPoints: %d"), activeZombieSpawnPoints.Num());
+			}
+		}
+	}
+
 	if (playerSpawnsSet == false)
 		SetPlayerSpawns();
 
@@ -57,28 +73,7 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 		}
 	}
 
-	TArray<AActor*> tempZombieSpawns;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AZombieSpawnPoint::StaticClass(), tempZombieSpawns);
-	for (AActor* actor : tempZombieSpawns)
-	{
-		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
-		{
-			ZombieSpawnPoints.Add(spawnPoint);
-		}
-	}
-
 	StartSpawningMobs();
-	//for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
-	//{
-	//	if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
-	//	{
-	//		FVector spawnLocation = spawnPoint->GetActorLocation();
-	//		if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
-	//		{
-	//			spawnPoint->SetIsUsed(true);
-	//		}
-	//	}
-	//}
 }
 
 void AZombiesCustomGameMode::SetPlayerSpawns()
@@ -99,31 +94,31 @@ void AZombiesCustomGameMode::StartSpawningMobs()
 {
 	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, [this]()
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Mobs Left to spawn: %d"), mobsLeftToSpawn);
 		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
 		{
 			int32 mobsToSpawn = FMath::Min(FMath::Min(maxMobsSpawned - numOfMobsSpawned, mobsSpawnedPerIteration), mobsLeftToSpawn);
 
-			UE_LOG(LogTemp, Warning, TEXT("MobsToSpawn: %d"), mobsToSpawn);
-
 			for (int i = 0; i < mobsToSpawn; i++)
 			{
-				AZombieSpawnPoint* randSpointPoint = ZombieSpawnPoints[FMath::RandRange(0, ZombieSpawnPoints.Num() - 1)];
-
-				if (!randSpointPoint->GetIsUsed())
+				AZombieSpawnPoint* randSpawnPoint = ZombieSpawnPoints[FMath::RandRange(0, ZombieSpawnPoints.Num() - 1)];
+				if (randSpawnPoint)
 				{
-					FVector spawnLocation = randSpointPoint->GetActorLocation();
-					if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+					if (!randSpawnPoint->GetIsUsed())
 					{
-						mobsLeftToSpawn--;
-						numOfMobsSpawned++;
+						FVector spawnLocation = randSpawnPoint->GetActorLocation();
+						if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
+						{
+							UE_LOG(LogTemp, Warning, TEXT("PROBLEM IF STATEMENT: %d"), mobsLeftToSpawn);
+							
+							FTimerHandle timerHandle;
+							mobsLeftToSpawn--;
+							numOfMobsSpawned++;
 
-						randSpointPoint->TempSetIsUsed(true);
+							randSpawnPoint->TempSetIsUsed(true); //THIS IS THE ISSUE
+						}
 					}
 				}
 			}
-
-			
 		}
 		else if (mobsLeftToSpawn <= 0)
 		{
@@ -185,6 +180,17 @@ void AZombiesCustomGameMode::DecreaseRemainingMobs()
 {
 	mobsRemainingToKill -= 1;
 	numOfMobsSpawned -= 1;
+}
+
+void AZombiesCustomGameMode::UpdateSpawnPoints(AInteractablesBarrierBase* barrier)
+{
+	for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
+	{
+		if (spawnPoint->GetZone() == barrier->GetZone1() || spawnPoint->GetZone() == barrier->GetZone2())
+		{
+			activeZombieSpawnPoints.AddUnique(spawnPoint);
+		}
+	}
 }
 
 int32 AZombiesCustomGameMode::GetCurrentRound()
