@@ -42,6 +42,24 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 	if (playerSpawnsSet == false)
 		SetPlayerSpawns();
 
+	/*if (PlayerSpawnPoints.Num() > 0)
+	{
+		int32 randPlayerSpawnPoint = FMath::RandRange(0, PlayerSpawnPoints.Num() - 1);
+
+		APlayerSpawnPoint* spawnPoint = PlayerSpawnPoints[randPlayerSpawnPoint];
+
+		if (!spawnPoint->GetIsUsed())
+		{
+			FVector SpawnLocation = spawnPoint->GetActorLocation();
+			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
+			{
+
+				NewPlayer->Possess(pawn);
+				spawnPoint->SetIsUsed(true);
+			}
+		}
+	}*/
+
 	for (APlayerSpawnPoint* spawnPoint : PlayerSpawnPoints)
 	{
 		/*UE_LOG(LogTemp, Warning, TEXT("Player Spawn Points"))*/
@@ -70,7 +88,6 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 			}
 		}
 	}
-
 	StartSpawningMobs();
 }
 
@@ -92,31 +109,26 @@ void AZombiesCustomGameMode::StartSpawningMobs()
 {
 	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, [this]()
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Mobs Left to spawn: %d"), mobsLeftToSpawn);
 		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
 		{
 			int32 mobsToSpawn = FMath::Min(FMath::Min(maxMobsSpawned - numOfMobsSpawned, mobsSpawnedPerIteration), mobsLeftToSpawn);
 
-			UE_LOG(LogTemp, Warning, TEXT("MobsToSpawn: %d"), mobsToSpawn);
-
 			for (int i = 0; i < mobsToSpawn; i++)
 			{
-				AZombieSpawnPoint* randSpointPoint = activeZombieSpawnPoints[FMath::RandRange(0, activeZombieSpawnPoints.Num() - 1)];
+				AZombieSpawnPoint* randSpawnPoint = activeZombieSpawnPoints[FMath::RandRange(0, activeZombieSpawnPoints.Num() - 1)];
 
-				if (!randSpointPoint->GetIsUsed())
+				if (randSpawnPoint && !randSpawnPoint->GetIsUsed())
 				{
-					FVector spawnLocation = randSpointPoint->GetActorLocation();
+					FVector spawnLocation = randSpawnPoint->GetActorLocation();
 					if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
 					{
 						mobsLeftToSpawn--;
 						numOfMobsSpawned++;
 
-						randSpointPoint->TempSetIsUsed(true);
+						randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
 					}
 				}
 			}
-
-			
 		}
 		else if (mobsLeftToSpawn <= 0)
 		{

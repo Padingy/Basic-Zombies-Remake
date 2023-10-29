@@ -27,10 +27,13 @@ protected:
 
 	bool isUsed;
 
+	FTimerHandle spawnPointTimerHandle;
+
 public:
 	bool GetIsUsed();
 	void SetIsUsed(bool value);
-	void TempSetIsUsed(bool value);
+	void StartCooldown();
+	void EndCooldown();
 	int32 GetZone();
 	void SetZone(int32 newZone);
 };

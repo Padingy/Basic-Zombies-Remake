@@ -20,24 +20,17 @@ void AZombieSpawnPoint::SetIsUsed(bool value)
 	isUsed = value;
 }
 
-void AZombieSpawnPoint::TempSetIsUsed(bool value)
+void AZombieSpawnPoint::StartCooldown()
 {
-	isUsed = value;
+	isUsed = true;
 
-	FTimerHandle spawnPointTimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, this, &AZombieSpawnPoint::EndCooldown, resetTime, false);
 
-	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, [this]()
-	{
-		if (isUsed == true)
-		{
-			isUsed = false;
-		}
-		else
-		{
-			isUsed = true;
-		}
+}
 
-	}, resetTime, false);
+void AZombieSpawnPoint::EndCooldown()
+{
+	isUsed = false;
 }
 
 int32 AZombieSpawnPoint::GetZone()

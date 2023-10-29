@@ -17,7 +17,10 @@ public:
 protected:
 	bool isUsed;
 
+	FTimerHandle spawnTimerHandle;
+
 public:
 	bool GetIsUsed();
 	void SetIsUsed(bool value);
+	void StartCooldown();
 };

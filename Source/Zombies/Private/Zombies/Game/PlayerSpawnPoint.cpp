@@ -17,3 +17,14 @@ void APlayerSpawnPoint::SetIsUsed(bool value)
 {
 	isUsed = value;
 }
+
+void APlayerSpawnPoint::StartCooldown()
+{
+	isUsed = true;
+
+	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, [this]()
+	{
+		UE_LOG(LogTemp, Warning, TEXT("PlayerSpawnPoint StartCooldown timer"));
+		isUsed = false;
+	}, 3.0f, false);
+}
