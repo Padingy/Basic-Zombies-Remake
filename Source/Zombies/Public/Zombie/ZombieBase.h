@@ -33,6 +33,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Stats)
 		float health;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Attack)
+		float damage;
+
 	UPROPERTY(EditAnywhere, Category = Animation)
 		float despawnTime;
 

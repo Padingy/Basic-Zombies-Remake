@@ -22,6 +22,7 @@ public:
 	UPROPERTY()
 		int32 mobsKilledInRound;
 
+
 	void IncrementMobsKilled(int32 increaseValue);
 	void SetMobsKilled(int32 newValue);
 

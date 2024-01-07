@@ -26,7 +26,7 @@ public:
 	void CheckRoundStatus();
 	void DecreaseRemainingMobs();
 
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 		int32 GetCurrentRound();
 
 	UPROPERTY(BlueprintReadWrite)

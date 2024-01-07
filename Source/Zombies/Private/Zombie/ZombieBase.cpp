@@ -10,6 +10,7 @@ AZombieBase::AZombieBase()
 {
 	maxHealth = 100.0f;
 	health = 100.0f;
+	damage = 50.0f;
 
 	despawnTime = 5.0f;
 }

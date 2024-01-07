@@ -17,3 +17,4 @@ void AZombiesCustomGameState::SetMobsKilled(int32 newValue)
 {
 	mobsKilledInRound = newValue;
 }
+

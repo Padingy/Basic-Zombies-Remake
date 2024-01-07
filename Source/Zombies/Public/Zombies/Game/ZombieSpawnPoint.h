@@ -17,7 +17,7 @@ class ZOMBIES_API AZombieSpawnPoint : public ATargetPoint
 public:
 	AZombieSpawnPoint();
 
-protected:
+private:
 
 	UPROPERTY(EditAnywhere, Category = "Spawning Settings")
 		float resetTime;

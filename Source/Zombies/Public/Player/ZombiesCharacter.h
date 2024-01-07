@@ -79,9 +79,18 @@ public:
 	void DecreasePoints(int decreaseValue);
 
 	void Heal();
+
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 
+	UFUNCTION(Exec)
+		void damagePlayer(float damage);
+
 	void Die();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void DeathScreen();
+
+	void DeathScreen_Implementation();
 
 	void SetMaxHealth(float newMaxHealth);
 	void SetReloadSpeedModifier(float newReloadSpeed);

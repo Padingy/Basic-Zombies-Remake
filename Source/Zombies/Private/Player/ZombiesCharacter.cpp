@@ -188,7 +188,7 @@ float AZombiesCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 
 	UE_LOG(LogTemp, Warning, TEXT("ActualDamage: %f"), actualDamage);
 
-	if (actualDamage > 0.0f)
+	if (actualDamage > 0.0f && playerData.health > 0.0f)
 	{
 		playerData.health -= actualDamage;
 
@@ -206,6 +206,23 @@ float AZombiesCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 	return actualDamage;
 }
 
+void AZombiesCharacter::damagePlayer(float damage)
+{
+	if (damage > 0.0f)
+	{
+		playerData.health -= damage;
+
+		if (playerData.health <= 0.0f)
+		{
+			Die();
+		}
+		else
+		{
+			//Deal with HUD stuff when HUD class is made in the future
+		}
+	}
+}
+
 void AZombiesCharacter::Die()
 {
 	if (GetMesh())
@@ -216,11 +233,17 @@ void AZombiesCharacter::Die()
 	SetActorEnableCollision(true);
 
 	GetMesh()->SetSimulatePhysics(true);
+	DeathScreen();
 
 	Mesh1P->DestroyComponent();
 	currentWeapon->Destroy();
 
 	Controller->UnPossess();
+
+}
+
+void AZombiesCharacter::DeathScreen_Implementation()
+{
 }
 
 void AZombiesCharacter::IncreaseHealth(float increaseValue)

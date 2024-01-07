@@ -60,9 +60,22 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 		}
 	}*/
 
+	/*APlayerSpawnPoint* randPlayerSpawnPoint = PlayerSpawnPoints[FMath::RandRange(0, PlayerSpawnPoints.Num() - 1)];
+	if (!randPlayerSpawnPoint->GetIsUsed())
+	{
+		FVector SpawnLocation = randPlayerSpawnPoint->GetActorLocation();
+		if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
+		{
+
+			NewPlayer->Possess(pawn);
+			randPlayerSpawnPoint->SetIsUsed(true);
+		}
+	}*/
+
+
 	for (APlayerSpawnPoint* spawnPoint : PlayerSpawnPoints)
 	{
-		/*UE_LOG(LogTemp, Warning, TEXT("Player Spawn Points"))*/
+		UE_LOG(LogTemp, Warning, TEXT("Player Spawn Points")); 
 		if (!spawnPoint->GetIsUsed())
 		{
 			FVector SpawnLocation = spawnPoint->GetActorLocation();
@@ -79,6 +92,7 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AZombieSpawnPoint::StaticClass(), tempZombieSpawns);
 	for (AActor* actor : tempZombieSpawns)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Zombie Spawn Points")); 
 		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
 		{
 			ZombieSpawnPoints.Add(spawnPoint);
@@ -107,6 +121,9 @@ void AZombiesCustomGameMode::SetPlayerSpawns()
 
 void AZombiesCustomGameMode::StartSpawningMobs()
 {
+
+	activeZombieSpawnPoints[0]->StartCooldown();
+	activeZombieSpawnPoints[1]->StartCooldown();
 	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, [this]()
 	{
 		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
@@ -125,8 +142,12 @@ void AZombiesCustomGameMode::StartSpawningMobs()
 						mobsLeftToSpawn--;
 						numOfMobsSpawned++;
 
-						randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
+						//randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
 					}
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
