@@ -24,7 +24,10 @@ void AZombieSpawnPoint::StartCooldown()
 {
 	isUsed = true;
 
-	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, this, &AZombieSpawnPoint::EndCooldown, resetTime, false);
+	GetWorld()->GetTimerManager().SetTimer(spawnPointTimerHandle, [this]()
+	{
+		isUsed = false;
+	}, resetTime, false);
 	
 }
 

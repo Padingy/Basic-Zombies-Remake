@@ -95,10 +95,13 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 		UE_LOG(LogTemp, Warning, TEXT("Zombie Spawn Points")); 
 		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
 		{
-			ZombieSpawnPoints.Add(spawnPoint);
 			if (spawnPoint->GetZone() == 0)
 			{
 				activeZombieSpawnPoints.Add(spawnPoint);
+			}
+			else
+			{
+				inactiveZombieSpawnPoints.Add(spawnPoint);
 			}
 		}
 	}
@@ -120,44 +123,41 @@ void AZombiesCustomGameMode::SetPlayerSpawns()
 }
 
 void AZombiesCustomGameMode::StartSpawningMobs()
+{ 
+	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, this, &AZombiesCustomGameMode::SpawningMobsTimer, 1.0f, true);
+}
+
+void AZombiesCustomGameMode::SpawningMobsTimer()
 {
-
-	activeZombieSpawnPoints[0]->StartCooldown();
-	activeZombieSpawnPoints[1]->StartCooldown();
-	GetWorld()->GetTimerManager().SetTimer(spawningMobsTimerHandle, [this]()
+	if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
 	{
-		if (mobsLeftToSpawn > 0 && numOfMobsSpawned < maxMobsSpawned)
+		int32 mobsToSpawn = FMath::Min(FMath::Min(maxMobsSpawned - numOfMobsSpawned, mobsSpawnedPerIteration), mobsLeftToSpawn);
+
+		for (int i = 0; i < mobsToSpawn; i++)
 		{
-			int32 mobsToSpawn = FMath::Min(FMath::Min(maxMobsSpawned - numOfMobsSpawned, mobsSpawnedPerIteration), mobsLeftToSpawn);
+			AZombieSpawnPoint* randSpawnPoint = activeZombieSpawnPoints[FMath::RandRange(0, activeZombieSpawnPoints.Num() - 1)];
 
-			for (int i = 0; i < mobsToSpawn; i++)
+			if (randSpawnPoint && !randSpawnPoint->GetIsUsed())
 			{
-				AZombieSpawnPoint* randSpawnPoint = activeZombieSpawnPoints[FMath::RandRange(0, activeZombieSpawnPoints.Num() - 1)];
-
-				if (randSpawnPoint && !randSpawnPoint->GetIsUsed())
+				FVector spawnLocation = randSpawnPoint->GetActorLocation();
+				if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
 				{
-					FVector spawnLocation = randSpawnPoint->GetActorLocation();
-					if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
-					{
-						mobsLeftToSpawn--;
-						numOfMobsSpawned++;
+					mobsLeftToSpawn--;
+					numOfMobsSpawned++;
 
-						//randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
-					}
-				}
-				else
-				{
-					break;
+					randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
 				}
 			}
+			else
+			{
+				break;
+			}
 		}
-		else if (mobsLeftToSpawn <= 0)
-		{
-			GetWorld()->GetTimerManager().ClearTimer(spawningMobsTimerHandle);
-		}
-
-	}, 1.0f, true);
-
+	}
+	else if (mobsLeftToSpawn <= 0)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(spawningMobsTimerHandle);
+	}
 }
 
 void AZombiesCustomGameMode::StartNewRound(int32 newRound)
@@ -190,7 +190,7 @@ void AZombiesCustomGameMode::UpdateSpawnPoints(AInteractablesBarrierBase* zoneAc
 {
 	if (zoneActivator)
 	{
-		for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
+		for (AZombieSpawnPoint* spawnPoint : inactiveZombieSpawnPoints)
 		{
 			if (spawnPoint->GetZone() == zoneActivator->GetSpawnZone1() || spawnPoint->GetZone() == zoneActivator->GetSpawnZone2())
 			{

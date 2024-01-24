@@ -3,6 +3,7 @@
 
 #include "Zombies/Public/Zombie/ZombieBase.h"
 #include "Zombies/Public/Zombies/Game/ZombiesCustomGameMode.h"
+#include "Components/CapsuleComponent.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -29,7 +30,6 @@ void AZombieBase::DestroyActor()
 
 void AZombieBase::Hit(AZombiesCharacter* attacker, FString hitBone)
 {
-	
 	HandleBoneHits(attacker, hitBone);
 
 	UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %d"), attacker->GetPoints());
@@ -354,7 +354,10 @@ void AZombieBase::Die()
 	}
 	SetActorEnableCollision(true);
 
+	GetCapsuleComponent()->DestroyComponent();
+
 	GetMesh()->SetSimulatePhysics(true);
+
 
 	FTimerHandle despawnTimer;
 	GetWorld()->GetTimerManager().SetTimer(despawnTimer, [this]

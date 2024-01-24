@@ -42,6 +42,8 @@ protected:
 
 	void StartSpawningMobs();
 
+	void SpawningMobsTimer();
+
 	UPROPERTY(EditAnywhere, Category = "Player Settings")
 		TSubclassOf<class AZombiesCharacter> playerClass;
 
@@ -49,8 +51,8 @@ protected:
 		TSubclassOf<class AZombieBase> zombieClass;
 
 	TArray<class APlayerSpawnPoint*> PlayerSpawnPoints;
-	TArray<class AZombieSpawnPoint*> ZombieSpawnPoints;
 	TArray<class AZombieSpawnPoint*> activeZombieSpawnPoints;
+	TArray<class AZombieSpawnPoint*> inactiveZombieSpawnPoints;
 
 	bool playerSpawnsSet;
 
