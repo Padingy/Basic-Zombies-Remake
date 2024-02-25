@@ -27,11 +27,15 @@ struct FPlayerData
 	UPROPERTY(EditAnywhere, Category = "Player Data")
 		float reloadSpeedMultiplier;
 
+	UPROPERTY(EditAnywhere, Category = "Player Data")
+		float stamina;
+
 	FPlayerData()
 	{
 		maxHealth = 100.0f;
 		health = 100.0f;
 		reloadSpeedMultiplier = 1.0f;
+		stamina = 100.0f;
 	}
 };
 
@@ -41,15 +45,33 @@ class ZOMBIES_API AZombiesCharacter : public ACharacterBase
 	GENERATED_BODY()
 public:
 	// Sets default values for this character's properties
-	AZombiesCharacter();
+	AZombiesCharacter(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	//Firing Functions
 	void OnFire();
 	void OnEndFire();
+
+	//Crouch Functions
+	void OnCrouchStart();
+	void OnCrouchEnd();
+
+	virtual void OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
+	virtual void OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust) override;
+
+	//Sprint Functions
+	void OnSprintStart();
+	void OnSprintEnd();
+
+	void UpdateStamina();
+
+	void IncreaseStamina(float value);
+	void DecreaseStamina(float value);
 
 	//Reload
 	void Reload();
@@ -72,7 +94,6 @@ protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 public:
-
 	//Points
 	void IncreasePoints(int increaseValue);
 
@@ -101,6 +122,7 @@ public:
 
 	int32 GetPoints();
 
+	bool GetIsSprinting();
 
 	//Weapons
 	FName GetWeaponAttachPoint() const;
@@ -123,6 +145,7 @@ public:
 protected:
 
 	FTimerHandle timerHandle;
+	FTimerHandle sprintTimerHandle;
 
 	AInteractablesBase* interactable;
 
@@ -154,4 +177,15 @@ protected:
 
 	UPROPERTY(BlueprintAssignable)
 		FInteractMessageChanged OnInteractMessageChanged;
+
+	//Crouch camera smoothing variables
+	float cameraHeightStanding;
+	float cameraHeightCrouching;
+	float cameraHeightCurrent;
+	float cameraHeightTarget;
+
+	uint8 bWantsToSprint : 1;
+
+	UPROPERTY(EditAnywhere, Category = "Player Data")
+		float staminaDecrement;
 };

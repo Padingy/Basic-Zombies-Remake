@@ -14,7 +14,7 @@ class ZOMBIES_API ACharacterBase : public ACharacter
 	GENERATED_BODY()
 public:
 	// Sets default values for this character's properties
-	ACharacterBase();
+	ACharacterBase(const FObjectInitializer& ObjectInitializer);
 
 protected:
 	/** Pawn mesh: 1st person view (arms; seen only by self) */

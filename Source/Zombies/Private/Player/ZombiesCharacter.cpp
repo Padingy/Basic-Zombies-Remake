@@ -2,6 +2,7 @@
 
 
 #include "Zombies/Public/Player/ZombiesCharacter.h"
+#include "Zombies/Public/Player/CustomCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Engine/World.h"
@@ -9,17 +10,26 @@
 #include "Zombies/Public/Zombies/Game/Weapons/WeaponsBase.h"
 #include "Zombies/Public/Zombie/ZombieBase.h"
 
-AZombiesCharacter::AZombiesCharacter()
+AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCustomCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	points = 500;
 	interactable = nullptr;
 	interactDistance = 100.0f;
 
+	bWantsToSprint = false;
+
+	staminaDecrement = 5.0f;
 }
 
 void AZombiesCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	cameraHeightStanding = FirstPersonCameraComponent->GetRelativeLocation().Z;
+	cameraHeightCrouching = FirstPersonCameraComponent->GetRelativeLocation().Z;
+	cameraHeightCurrent = cameraHeightStanding;
+	cameraHeightTarget = cameraHeightCrouching;
 
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
@@ -29,6 +39,16 @@ void AZombiesCharacter::BeginPlay()
 	OnPointsChanged.Broadcast(points);
 
 	SpawnStartingWeapons();
+}
+
+void AZombiesCharacter::Tick(float DeltaTime)
+{
+	if (cameraHeightCurrent != cameraHeightTarget)
+	{
+		cameraHeightCurrent = FMath::FInterpTo(cameraHeightCurrent, cameraHeightTarget, DeltaTime, 10.0f);
+
+		FirstPersonCameraComponent->SetRelativeLocation(FVector(FirstPersonCameraComponent->GetRelativeLocation().X, FirstPersonCameraComponent->GetRelativeLocation().Y, cameraHeightCurrent));
+	}
 }
 
 //Action bound to input for press input to fire current weapon
@@ -47,6 +67,79 @@ void AZombiesCharacter::OnEndFire()
 	{
 		currentWeapon->EndFire();
 	}
+}
+
+void AZombiesCharacter::OnCrouchStart()
+{
+	Crouch();
+}
+
+void AZombiesCharacter::OnCrouchEnd()
+{
+	UnCrouch();
+}
+
+void AZombiesCharacter::OnStartCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	Super::OnStartCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+
+	cameraHeightCurrent = cameraHeightStanding + ScaledHalfHeightAdjust;
+
+	cameraHeightTarget = cameraHeightCrouching;
+}
+
+void AZombiesCharacter::OnEndCrouch(float HalfHeightAdjust, float ScaledHalfHeightAdjust)
+{
+	Super::OnEndCrouch(HalfHeightAdjust, ScaledHalfHeightAdjust);
+
+	cameraHeightCurrent = cameraHeightCrouching - ScaledHalfHeightAdjust;
+
+	cameraHeightTarget = cameraHeightStanding;
+}
+
+void AZombiesCharacter::OnSprintStart()
+{
+	if (playerData.stamina > 0)
+	{
+		bWantsToSprint = true;
+
+		GetWorld()->GetTimerManager().SetTimer(sprintTimerHandle, this, &AZombiesCharacter::UpdateStamina, 0.05f, true);
+	}
+}
+
+void AZombiesCharacter::OnSprintEnd()
+{
+	bWantsToSprint = false;
+	GetWorld()->GetTimerManager().ClearTimer(sprintTimerHandle);
+}
+
+void AZombiesCharacter::UpdateStamina()
+{
+	if (playerData.stamina > 0)
+	{
+		DecreaseStamina(staminaDecrement);
+
+		FString staminaAsString = FString::SanitizeFloat(playerData.stamina);
+
+		FString debugMessage = FString::Printf(TEXT("Stamina: %s"), *FString::SanitizeFloat(playerData.stamina));
+
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
+	}
+	else
+	{
+		bWantsToSprint = false;
+		GetWorld()->GetTimerManager().ClearTimer(sprintTimerHandle);
+	}
+}
+
+void AZombiesCharacter::IncreaseStamina(float value)
+{
+	playerData.stamina += value;
+}
+
+void AZombiesCharacter::DecreaseStamina(float value)
+{
+	playerData.stamina -= value;
 }
 
 //Action bound to input for press input to reload current weapon
@@ -286,6 +379,11 @@ int32 AZombiesCharacter::GetPoints()
 	return points;
 }
 
+bool AZombiesCharacter::GetIsSprinting()
+{
+	return bWantsToSprint && (GetVelocity().GetSafeNormal2D() | GetActorForwardVector()) > 0.1;
+}
+
 FName AZombiesCharacter::GetWeaponAttachPoint() const
 {
 	return weaponAttachPoint;
@@ -332,14 +430,16 @@ void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	// set up gameplay key bindings
 	check(PlayerInputComponent);
 
+	PlayerInputComponent->BindAxis("MoveForward", this, &AZombiesCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AZombiesCharacter::MoveRight);
+
+
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AZombiesCharacter::OnFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AZombiesCharacter::OnEndFire);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AZombiesCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AZombiesCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AZombiesCharacter::OnNextWeapon);
 	PlayerInputComponent->BindAction("PrevWeapon", IE_Pressed, this, &AZombiesCharacter::OnPrevWeapon);
@@ -347,6 +447,12 @@ void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AZombiesCharacter::Reload);
 
 	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AZombiesCharacter::OnInteract);
+
+	PlayerInputComponent->BindAction("Crouch", IE_Pressed, this, &AZombiesCharacter::OnCrouchStart);
+	PlayerInputComponent->BindAction("Crouch", IE_Released, this, &AZombiesCharacter::OnCrouchEnd);
+
+	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AZombiesCharacter::OnSprintStart);
+	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AZombiesCharacter::OnSprintEnd);
 
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("TurnRate", this, &AZombiesCharacter::TurnAtRate);

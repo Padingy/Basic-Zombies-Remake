@@ -12,7 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
-ACharacterBase::ACharacterBase()
+ACharacterBase::ACharacterBase(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
@@ -128,8 +129,15 @@ void ACharacterBase::MoveForward(float Value)
 {
 	if (Value != 0.0f)
 	{
+		if (Value == -1.0f)
+		{
+			AddMovementInput(GetActorForwardVector(), Value * 0.75);
+		}
+		else
+		{
+			AddMovementInput(GetActorForwardVector(), Value);
+		}
 		// add movement in that direction
-		AddMovementInput(GetActorForwardVector(), Value);
 	}
 }
 
