@@ -69,6 +69,7 @@ protected:
 	void OnSprintEnd();
 
 	void UpdateStamina();
+	void RefreshStamina();
 
 	void IncreaseStamina(float value);
 	void DecreaseStamina(float value);
@@ -146,6 +147,7 @@ protected:
 
 	FTimerHandle timerHandle;
 	FTimerHandle sprintTimerHandle;
+	FTimerHandle sprintRefreshTimerHandle;
 
 	AInteractablesBase* interactable;
 
@@ -186,6 +188,15 @@ protected:
 
 	uint8 bWantsToSprint : 1;
 
-	UPROPERTY(EditAnywhere, Category = "Player Data")
+	UPROPERTY(EditAnywhere, Category = "Stamina Data")
 		float staminaDecrement;
+
+	UPROPERTY(EditAnywhere, Category = "Stamina Data")
+		float staminaRefreshRate;
+
+	UPROPERTY(EditAnywhere, Category = "Stamina Data")
+		float staminaCooldown;
+
+	float currentStaminaCooldown;
+
 };

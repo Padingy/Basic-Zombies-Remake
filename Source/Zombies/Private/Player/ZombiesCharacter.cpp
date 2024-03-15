@@ -20,6 +20,9 @@ AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer
 	bWantsToSprint = false;
 
 	staminaDecrement = 5.0f;
+	staminaRefreshRate = 0.25f;
+	staminaCooldown = 2.0f;
+	currentStaminaCooldown = 0.0f;
 }
 
 void AZombiesCharacter::BeginPlay()
@@ -101,6 +104,8 @@ void AZombiesCharacter::OnSprintStart()
 {
 	if (playerData.stamina > 0)
 	{
+		GetWorld()->GetTimerManager().ClearTimer(sprintRefreshTimerHandle);
+
 		bWantsToSprint = true;
 
 		GetWorld()->GetTimerManager().SetTimer(sprintTimerHandle, this, &AZombiesCharacter::UpdateStamina, 0.05f, true);
@@ -111,6 +116,17 @@ void AZombiesCharacter::OnSprintEnd()
 {
 	bWantsToSprint = false;
 	GetWorld()->GetTimerManager().ClearTimer(sprintTimerHandle);
+
+	if (playerData.stamina > 0.0f)
+	{
+		currentStaminaCooldown = staminaCooldown / 2;
+	}
+	else
+	{
+		currentStaminaCooldown = 0.0f;
+	}
+
+	GetWorld()->GetTimerManager().SetTimer(sprintRefreshTimerHandle, this, &AZombiesCharacter::RefreshStamina, 0.05f, true);
 }
 
 void AZombiesCharacter::UpdateStamina()
@@ -127,19 +143,47 @@ void AZombiesCharacter::UpdateStamina()
 	}
 	else
 	{
+		currentStaminaCooldown = 0.0f;
 		bWantsToSprint = false;
 		GetWorld()->GetTimerManager().ClearTimer(sprintTimerHandle);
+		GetWorld()->GetTimerManager().SetTimer(sprintRefreshTimerHandle, this, &AZombiesCharacter::RefreshStamina, 0.05f, true);
 	}
+}
+
+void AZombiesCharacter::RefreshStamina()
+{
+	currentStaminaCooldown += 0.1f;
+
+	if (currentStaminaCooldown >= staminaCooldown)
+	{
+		if (playerData.stamina < 100.0f)
+		{
+			IncreaseStamina(staminaRefreshRate);
+		}
+		else
+		{
+			currentStaminaCooldown = 0.0f;
+			GetWorld()->GetTimerManager().ClearTimer(sprintRefreshTimerHandle);
+		}
+	}
+
+	FString staminaAsString = FString::SanitizeFloat(playerData.stamina);
+
+	FString debugMessage = FString::Printf(TEXT("Stamina: %s"), *FString::SanitizeFloat(playerData.stamina));
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
 }
 
 void AZombiesCharacter::IncreaseStamina(float value)
 {
 	playerData.stamina += value;
+	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, 100.0f);
 }
 
 void AZombiesCharacter::DecreaseStamina(float value)
 {
 	playerData.stamina -= value;
+	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, 100.0f);
 }
 
 //Action bound to input for press input to reload current weapon
