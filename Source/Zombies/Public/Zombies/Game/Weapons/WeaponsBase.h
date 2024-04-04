@@ -19,6 +19,15 @@ enum class EWeaponState
 	Empty UMETA(DisplayName = "Empty")
 };
 
+UENUM(BlueprintType)
+enum class EWeaponType : uint8
+{
+	M1911 UMETA(DisplayName = "M1911"),
+	AK47 UMETA(DisplayName = "AK47"),
+	AR4 UMETA(DisplayName = "AR4"),
+	MAC10 UMETA(DisplayName = "MAC10")
+};
+
 USTRUCT()
 struct FWeaponData
 {
@@ -82,6 +91,9 @@ public:
 	class AZombiesCharacter* GetWeaponOwner() const;
 
 	UFUNCTION(BlueprintCallable)
+		TEnumAsByte<EWeaponType> GetWeaponType();
+
+	UFUNCTION(BlueprintCallable)
 		int32 GetCurrentAmmo();
 	
 	UFUNCTION(BlueprintCallable)
@@ -115,6 +127,10 @@ protected:
 
 	void DetermineWeaponState();
 
+public:
+	UPROPERTY(EditAnywhere, Category = Config)
+		float spreadMultiplier;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -126,6 +142,9 @@ protected:
 		FWeaponData weaponData;
 
 	EWeaponState weaponState;
+
+	UPROPERTY(EditAnywhere, Category = Config)
+		TEnumAsByte<EWeaponType> weaponType;
 
 	UPROPERTY(Transient)
 		class AZombiesCharacter* weaponOwner;

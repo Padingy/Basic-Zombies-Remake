@@ -39,10 +39,10 @@ void AZombieBase::Hit(AZombiesCharacter* attacker, FString hitBone)
 
 void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
 {
-	//Head
-	if (hitBone == "head")
+	//Headshots
+	if (hitBone.Contains("head") || hitBone.Contains("neck"))
 	{
-		if (DecreaseHealth(10.0f))
+		if (health <= 0)
 		{
 			attacker->IncreasePoints(100);
 		}
@@ -51,10 +51,10 @@ void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
 			attacker->IncreasePoints(10);
 		}
 	}
-	//Torso
-	else if (hitBone == "spine_01")
+	//Body Hits
+	if (hitBone.Contains("spine") || hitBone.Contains("pelvis"))
 	{
-		if (DecreaseHealth(10.0f))
+		if (health <= 0)
 		{
 			attacker->IncreasePoints(60);
 		}
@@ -63,226 +63,12 @@ void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
 			attacker->IncreasePoints(10);
 		}
 	}
-	else if (hitBone == "spine_02")
+	//Limb Hits
+	if (hitBone.Contains("_l") || hitBone.Contains("_r"))
 	{
-		if (DecreaseHealth(10.0f))
+		if (health <= 0)
 		{
 			attacker->IncreasePoints(60);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Left Arm
-	else if (hitBone == "upperarm_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "lowerarm_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "hand_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Right Arm
-	else if (hitBone == "upperarm_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "lowerarm_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "hand_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Pelvis
-	else if (hitBone == "pelvis")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Left Leg
-	else if (hitBone == "upperarm_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "lowerarm_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "hand_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Left Leg
-	else if (hitBone == "thigh_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "calf_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "foot_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "ball_l")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	//Right Leg
-	else if (hitBone == "thigh_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "calf_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "foot_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else if (hitBone == "ball_r")
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
-		}
-		else
-		{
-			attacker->IncreasePoints(10);
-		}
-	}
-	else
-	{
-		if (DecreaseHealth(10.0f))
-		{
-			attacker->IncreasePoints(50);
 		}
 		else
 		{

@@ -20,6 +20,8 @@ AWeaponsBase::AWeaponsBase()
 	bWantsToFire = false;
 
 	weaponState = EWeaponState::Idle;
+
+	spreadMultiplier = 1.0f;
 }
 
 void AWeaponsBase::Fire()
@@ -100,6 +102,11 @@ void AWeaponsBase::SetNewOwner(AZombiesCharacter* newOwner)
 class AZombiesCharacter* AWeaponsBase::GetWeaponOwner() const
 {
 	return weaponOwner;
+}
+
+TEnumAsByte<EWeaponType> AWeaponsBase::GetWeaponType()
+{
+	return weaponType;
 }
 
 int32 AWeaponsBase::GetCurrentAmmo()

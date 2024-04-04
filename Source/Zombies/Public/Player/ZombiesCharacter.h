@@ -28,14 +28,17 @@ struct FPlayerData
 		float reloadSpeedMultiplier;
 
 	UPROPERTY(EditAnywhere, Category = "Player Data")
-		float stamina;
+		float maxStamina;
+
+	float stamina;
 
 	FPlayerData()
 	{
 		maxHealth = 100.0f;
 		health = 100.0f;
 		reloadSpeedMultiplier = 1.0f;
-		stamina = 100.0f;
+		maxStamina = 100.0f;
+		stamina = maxStamina;
 	}
 };
 
@@ -167,6 +170,14 @@ protected:
 		FName weaponAttachPoint;
 
 	AWeaponsBase* currentWeapon;
+
+	bool bIsAiming;
+
+	UFUNCTION(BlueprintCallable)
+		bool GetIsAiming();
+
+	void StartAiming();
+	void StopAiming();
 
 	int32 weaponIndex;
 	TArray<AWeaponsBase*> weaponArray;

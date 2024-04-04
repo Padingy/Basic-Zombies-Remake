@@ -34,6 +34,8 @@ void AZombiesCharacter::BeginPlay()
 	cameraHeightCurrent = cameraHeightStanding;
 	cameraHeightTarget = cameraHeightCrouching;
 
+	playerData.stamina = playerData.maxStamina;
+
 	//Attach gun mesh component to Skeleton, doing it here because the skeleton is not yet created in the constructor
 	FP_Gun->AttachToComponent(Mesh1P, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
 
@@ -156,7 +158,7 @@ void AZombiesCharacter::RefreshStamina()
 
 	if (currentStaminaCooldown >= staminaCooldown)
 	{
-		if (playerData.stamina < 100.0f)
+		if (playerData.stamina < playerData.maxStamina)
 		{
 			IncreaseStamina(staminaRefreshRate);
 		}
@@ -177,13 +179,13 @@ void AZombiesCharacter::RefreshStamina()
 void AZombiesCharacter::IncreaseStamina(float value)
 {
 	playerData.stamina += value;
-	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, 100.0f);
+	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, playerData.maxStamina);
 }
 
 void AZombiesCharacter::DecreaseStamina(float value)
 {
 	playerData.stamina -= value;
-	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, 100.0f);
+	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, playerData.maxStamina);
 }
 
 //Action bound to input for press input to reload current weapon
@@ -221,8 +223,6 @@ void AZombiesCharacter::FindInteractableObjects()
 		interactable = nullptr;
 		OnInteractMessageChanged.Broadcast(FString());
 	}
-
-	DrawDebugLine(GetWorld(), start, end, FColor::Yellow, false, 10.0f, 0.0f, 1.0f);
 }
 
 void AZombiesCharacter::OnInteract()
@@ -301,6 +301,23 @@ void AZombiesCharacter::SetCurrentWeapon(AWeaponsBase* newWeapon)
 		currentWeapon->SetNewOwner(this);
 		currentWeapon->OnEquip();
 	}
+}
+
+bool AZombiesCharacter::GetIsAiming()
+{
+	return bIsAiming;
+}
+
+void AZombiesCharacter::StartAiming()
+{
+	bIsAiming = true;
+	currentWeapon->spreadMultiplier = 0.0f;
+}
+
+void AZombiesCharacter::StopAiming()
+{
+	bIsAiming = false;
+	currentWeapon->spreadMultiplier = 1.0f;
 }
 
 void AZombiesCharacter::IncreasePoints(int increaseValue)
@@ -483,6 +500,9 @@ void AZombiesCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AZombiesCharacter::OnFire);
 	PlayerInputComponent->BindAction("Fire", IE_Released, this, &AZombiesCharacter::OnEndFire);
+
+	PlayerInputComponent->BindAction("ADS", IE_Pressed, this, &AZombiesCharacter::StartAiming);
+	PlayerInputComponent->BindAction("ADS", IE_Released, this, &AZombiesCharacter::StopAiming);
 
 
 	PlayerInputComponent->BindAction("NextWeapon", IE_Pressed, this, &AZombiesCharacter::OnNextWeapon);

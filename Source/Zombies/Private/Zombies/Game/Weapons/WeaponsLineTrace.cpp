@@ -18,8 +18,13 @@ void AWeaponsLineTrace::Fire()
 		UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
 
 		FVector startLoc = cameraComponent->GetComponentLocation();
-		FVector rot = cameraComponent->GetComponentRotation().Vector();
-		FVector endLoc = startLoc + rot * 2000.0f;
+
+		float spreadX = FMath::FRandRange(-2.0f, 2.0f);
+		float spreadY = FMath::FRandRange(-2.0f, 2.0f);
+		float spreadZ = FMath::FRandRange(-2.0f, 2.0f);
+		FRotator rot = (FRotator(spreadX, spreadY, spreadZ) * spreadMultiplier) + cameraComponent->GetComponentRotation();
+
+		FVector endLoc = startLoc + (rot.Vector() * 2000.0f);
 		FVector shootDir = endLoc - startLoc;
 
 		TArray<FHitResult>hitResults = PerformLineTrace(startLoc, endLoc);
@@ -31,9 +36,6 @@ void AWeaponsLineTrace::Fire()
 			currentAmmo--;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentAmmo);
-	UE_LOG(LogTemp, Warning, TEXT("WeaponsLineTrace OnFire %d"), currentReserveAmmo);
-
 }
 
 TArray<FHitResult> AWeaponsLineTrace::PerformLineTrace(FVector startLoc, FVector Endloc)
@@ -61,8 +63,8 @@ void AWeaponsLineTrace::DealWithHits(TArray<FHitResult>& hitResults, FVector& sh
 			{
 				FString hitBone = hit.BoneName.ToString();
 
-				zombie->Hit(weaponOwner, hitBone);
 				DealDamage(weaponData.damage, hit, shootDir);
+				zombie->Hit(weaponOwner, hitBone);
 
 				UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
 			}

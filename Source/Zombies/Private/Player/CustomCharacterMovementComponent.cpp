@@ -15,7 +15,7 @@ float UCustomCharacterMovementComponent::GetMaxSpeed() const
 	AZombiesCharacter* playerCharacter = Cast<AZombiesCharacter>(CharacterOwner);
 	if (playerCharacter && playerCharacter->GetIsSprinting())
 	{
-		maxSpeed *= 2.0f;
+		maxSpeed *= 1.5f;
 	}
 
 	return maxSpeed;
