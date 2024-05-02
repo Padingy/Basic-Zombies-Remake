@@ -15,21 +15,24 @@ void AWeaponsLineTrace::Fire()
 {
 	if (currentAmmo > 0)
 	{
-		UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
+		for (int i = 0; i < raysPerShot * weaponOwner->GetRayPerShotMultiplier(); i += 1)
+		{
+			UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
 
-		FVector startLoc = cameraComponent->GetComponentLocation();
+			FVector startLoc = cameraComponent->GetComponentLocation();
 
-		float spreadX = FMath::FRandRange(-2.0f, 2.0f);
-		float spreadY = FMath::FRandRange(-2.0f, 2.0f);
-		float spreadZ = FMath::FRandRange(-2.0f, 2.0f);
-		FRotator rot = (FRotator(spreadX, spreadY, spreadZ) * spreadMultiplier) + cameraComponent->GetComponentRotation();
+			float spreadX = FMath::FRandRange(-2.0f, 2.0f);
+			float spreadY = FMath::FRandRange(-2.0f, 2.0f);
+			float spreadZ = FMath::FRandRange(-2.0f, 2.0f);
+			FRotator rot = (FRotator(spreadX, spreadY, spreadZ) * spreadMultiplier) + cameraComponent->GetComponentRotation();
 
-		FVector endLoc = startLoc + (rot.Vector() * 2000.0f);
-		FVector shootDir = endLoc - startLoc;
+			FVector endLoc = startLoc + (rot.Vector() * 2000.0f);
+			FVector shootDir = endLoc - startLoc;
 
-		TArray<FHitResult>hitResults = PerformLineTrace(startLoc, endLoc);
+			TArray<FHitResult>hitResults = PerformLineTrace(startLoc, endLoc);
 
-		DealWithHits(hitResults, shootDir);
+			DealWithHits(hitResults, shootDir);
+		}
 
 		if (!weaponData.bInfiniteAmmo)
 		{

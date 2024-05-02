@@ -63,10 +63,7 @@ void ACustomZombiesGameMode::PostLogin(APlayerController* NewPlayer)
 			ZombieSpawnPoints.Add(spawnPoint);
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Zombie Spawn Points: %d"), ZombieSpawnPoints.Num());
 
-
-	
 	for (AZombieSpawnPoint* spawnPoint : ZombieSpawnPoints)
 	{
 		if (!spawnPoint->GetIsUsed()) //This needs to be removed when I add a timer for the Zombies to be spawned from with a Zombie limiter in the world
@@ -75,6 +72,7 @@ void ACustomZombiesGameMode::PostLogin(APlayerController* NewPlayer)
 			if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
 			{
 				spawnPoint->SetIsUsed(true);
+				UE_LOG(LogTemp, Warning, TEXT("PostLogin spawn zombie stuff"));
 			}
 		}
 	}
@@ -109,7 +107,7 @@ void ACustomZombiesGameMode::EndRound()
 	UE_LOG(LogTemp, Warning, TEXT("Temp"));
 }
 
-void ACustomZombiesGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMobsInRound to satart a new round
+void ACustomZombiesGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMobsInRound to start a new round
 {
 	AZombiesCustomGameState* const gameState = Cast<AZombiesCustomGameState>(GameState);
 	

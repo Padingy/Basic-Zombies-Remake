@@ -8,6 +8,7 @@
 #include "Engine/World.h"
 #include "Zombies/Public/Zombies/Game/Interactables/InteractablesBase.h"
 #include "Zombies/Public/Zombies/Game/Weapons/WeaponsBase.h"
+#include "Zombies/Public/Components/AC_PerkComponent.h"
 #include "Zombies/Public/Zombie/ZombieBase.h"
 
 AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer)
@@ -23,6 +24,16 @@ AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer
 	staminaRefreshRate = 0.25f;
 	staminaCooldown = 2.0f;
 	currentStaminaCooldown = 0.0f;
+
+	healthRegenRate = 1.0f;
+	healthRegenCooldown = 3.0f;
+	currentHealthCooldown = 0.0f;
+
+	moveSpeedMultiplier = 1.0f;
+	rayPerShotMultiplier = 1;
+	fireRateMultiplier = 1.0f;
+
+	revivalTime = 1.0f;
 }
 
 void AZombiesCharacter::BeginPlay()
@@ -71,6 +82,31 @@ void AZombiesCharacter::OnEndFire()
 	if (currentWeapon)
 	{
 		currentWeapon->EndFire();
+	}
+}
+
+void AZombiesCharacter::RegenHealth()
+{
+	GetWorld()->GetTimerManager().SetTimer(healthRegenTimerHandle, this, &AZombiesCharacter::RegenHealthTimerFunction, 0.05f, true);
+}
+
+void AZombiesCharacter::RegenHealthTimerFunction()
+{
+	currentHealthCooldown += 0.05f;
+	FString debugMessage = FString::Printf(TEXT("Health: %s"), *FString::SanitizeFloat(playerData.health));
+
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
+	if (currentHealthCooldown >= healthRegenCooldown)
+	{
+		if (playerData.health < playerData.maxHealth)
+		{
+			playerData.health += healthRegenRate;
+			playerData.health = FMath::Clamp(playerData.health, 0.0f, playerData.maxHealth);
+		}
+		else
+		{
+			GetWorld()->GetTimerManager().ClearTimer(healthRegenTimerHandle);
+		}
 	}
 }
 
@@ -154,8 +190,8 @@ void AZombiesCharacter::UpdateStamina()
 
 void AZombiesCharacter::RefreshStamina()
 {
-	currentStaminaCooldown += 0.1f;
-
+	currentStaminaCooldown += 0.05f;
+	
 	if (currentStaminaCooldown >= staminaCooldown)
 	{
 		if (playerData.stamina < playerData.maxStamina)
@@ -168,12 +204,6 @@ void AZombiesCharacter::RefreshStamina()
 			GetWorld()->GetTimerManager().ClearTimer(sprintRefreshTimerHandle);
 		}
 	}
-
-	FString staminaAsString = FString::SanitizeFloat(playerData.stamina);
-
-	FString debugMessage = FString::Printf(TEXT("Stamina: %s"), *FString::SanitizeFloat(playerData.stamina));
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
 }
 
 void AZombiesCharacter::IncreaseStamina(float value)
@@ -186,6 +216,16 @@ void AZombiesCharacter::DecreaseStamina(float value)
 {
 	playerData.stamina -= value;
 	playerData.stamina = FMath::Clamp(playerData.stamina, 0.0f, playerData.maxStamina);
+}
+
+void AZombiesCharacter::SetMaxStamina(float newMaxStam)
+{
+	playerData.maxStamina = newMaxStam;
+}
+
+float AZombiesCharacter::GetMaxStamina()
+{
+	return playerData.maxStamina;
 }
 
 //Action bound to input for press input to reload current weapon
@@ -303,9 +343,39 @@ void AZombiesCharacter::SetCurrentWeapon(AWeaponsBase* newWeapon)
 	}
 }
 
+void AZombiesCharacter::SetRayPerShotMultiplier(int newMultiplier)
+{
+	rayPerShotMultiplier = newMultiplier;
+}
+
+int AZombiesCharacter::GetRayPerShotMultiplier()
+{
+	return rayPerShotMultiplier;
+}
+
+void AZombiesCharacter::SetFireRateMultiplier(float newMultiplier)
+{
+	fireRateMultiplier = newMultiplier;
+}
+
+float AZombiesCharacter::GetFireRateMultiplier()
+{
+	return fireRateMultiplier;
+}
+
 bool AZombiesCharacter::GetIsAiming()
 {
 	return bIsAiming;
+}
+
+float AZombiesCharacter::GetMoveSpeedMultipler()
+{
+	return moveSpeedMultiplier;
+}
+
+void AZombiesCharacter::SetMoveSpeedMultiplier(float moveSpeed)
+{
+	moveSpeedMultiplier = moveSpeed;
 }
 
 void AZombiesCharacter::StartAiming()
@@ -340,23 +410,21 @@ float AZombiesCharacter::TakeDamage(float Damage, FDamageEvent const& DamageEven
 {
 	float actualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	UE_LOG(LogTemp, Warning, TEXT("ActualDamage: %f"), actualDamage);
-
 	if (actualDamage > 0.0f && playerData.health > 0.0f)
 	{
 		playerData.health -= actualDamage;
 
+		GetWorld()->GetTimerManager().ClearTimer(healthRegenTimerHandle);
 		if (playerData.health <= 0.0f)
 		{
 			Die();
 		}
 		else
 		{
-			//Deal with HUD stuff when HUD class is made in the future
+			currentHealthCooldown = 0.0f;
+			RegenHealth();
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Player Health: %f"), playerData.health);
 	return actualDamage;
 }
 
@@ -387,13 +455,54 @@ void AZombiesCharacter::Die()
 	SetActorEnableCollision(true);
 
 	GetMesh()->SetSimulatePhysics(true);
-	DeathScreen();
 
-	Mesh1P->DestroyComponent();
-	currentWeapon->Destroy();
+	if (revivalTime == 0.0f)
+	{
+		DeathScreen();
+	}
+	else
+	{
+		ReviveScreen();
+		GetWorld()->GetTimerManager().SetTimer(reviveTimerHandle, this, &AZombiesCharacter::Revive, revivalTime, false);
+	}
 
-	Controller->UnPossess();
+	Mesh1P->SetHiddenInGame(true);
+	currentWeapon->SetActorHiddenInGame(true);
 
+	if (UAC_PerkComponent* perkComponent = Cast<UAC_PerkComponent>(this->GetComponentByClass(UAC_PerkComponent::StaticClass())))
+	{
+		perkComponent->RemoveAllPerks();
+	}
+}
+
+void AZombiesCharacter::Revive()
+{
+	playerData.health = playerData.maxHealth;
+	GetMesh()->SetSimulatePhysics(false);
+	
+	if (GetMesh())
+	{
+		static FName CollisionProfileName(TEXT("CharacterMesh"));
+		GetMesh()->SetCollisionProfileName(CollisionProfileName);
+	}
+
+	SetHUD();
+	
+	Mesh1P->SetHiddenInGame(false);
+	currentWeapon->SetActorHiddenInGame(false);
+}
+
+void AZombiesCharacter::SetRevivalTime(float newRevivalTime)
+{
+	revivalTime = newRevivalTime;
+}
+
+void AZombiesCharacter::SetHUD_Implementation()
+{
+}
+
+void AZombiesCharacter::ReviveScreen_Implementation()
+{
 }
 
 void AZombiesCharacter::DeathScreen_Implementation()

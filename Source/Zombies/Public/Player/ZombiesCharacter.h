@@ -60,6 +60,8 @@ protected:
 	void OnFire();
 	void OnEndFire();
 
+	void RegenHealthTimerFunction();
+
 	//Crouch Functions
 	void OnCrouchStart();
 	void OnCrouchEnd();
@@ -73,9 +75,6 @@ protected:
 
 	void UpdateStamina();
 	void RefreshStamina();
-
-	void IncreaseStamina(float value);
-	void DecreaseStamina(float value);
 
 	//Reload
 	void Reload();
@@ -112,14 +111,25 @@ public:
 
 	void Die();
 
+	void Revive();
+
+	void SetRevivalTime(float newRevivalTime);
+
+	UFUNCTION(BlueprintNativeEvent)
+		void SetHUD();
+	
 	UFUNCTION(BlueprintNativeEvent)
 		void DeathScreen();
+
+	UFUNCTION(BlueprintNativeEvent)
+		void ReviveScreen();
 
 	void DeathScreen_Implementation();
 
 	void SetMaxHealth(float newMaxHealth);
 	void SetReloadSpeedModifier(float newReloadSpeed);
 
+	void RegenHealth();
 	float GetMaxHealth();
 	float GetHealth();
 	float GetReloadSpeedMultiplier();
@@ -127,6 +137,15 @@ public:
 	int32 GetPoints();
 
 	bool GetIsSprinting();
+
+	void SetMaxStamina(float newMaxStam);
+	float GetMaxStamina();
+	
+	void IncreaseStamina(float value);
+	void DecreaseStamina(float value);
+
+	float GetMoveSpeedMultipler();
+	void SetMoveSpeedMultiplier(float moveSpeed);
 
 	//Weapons
 	FName GetWeaponAttachPoint() const;
@@ -146,11 +165,19 @@ public:
 
 	void SetCurrentWeapon(AWeaponsBase* newWeapon);
 
+	void SetRayPerShotMultiplier(int newMultiplier);
+	int GetRayPerShotMultiplier();
+
+	void SetFireRateMultiplier(float newMultiplier);
+	float GetFireRateMultiplier();
+
 protected:
 
 	FTimerHandle timerHandle;
 	FTimerHandle sprintTimerHandle;
 	FTimerHandle sprintRefreshTimerHandle;
+	FTimerHandle healthRegenTimerHandle;
+	FTimerHandle reviveTimerHandle;
 
 	AInteractablesBase* interactable;
 
@@ -170,6 +197,8 @@ protected:
 		FName weaponAttachPoint;
 
 	AWeaponsBase* currentWeapon;
+
+	
 
 	bool bIsAiming;
 
@@ -210,4 +239,19 @@ protected:
 
 	float currentStaminaCooldown;
 
+	UPROPERTY(EditAnywhere, Category = "Health Data")
+		float healthRegenRate;
+
+	//How long the cooldown will be after getting hit before health regen starts to take effect
+	UPROPERTY(EditAnywhere, Category = "Health Data")
+		float healthRegenCooldown;
+
+	//How long it has been since the player got hit. Checked against healthRegenCooldown
+	float currentHealthCooldown;
+
+	int rayPerShotMultiplier;
+	float moveSpeedMultiplier;
+	float fireRateMultiplier;
+
+	float revivalTime;
 };

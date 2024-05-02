@@ -107,6 +107,9 @@ public:
 
 	USkeletalMeshComponent* GetMesh();
 
+	void SetRaysPerShot(int newRaysPerShot);
+	int GetRaysPerShot();
+	
 	void OnEquip();
 	void OnUnequip();
 
@@ -119,6 +122,7 @@ protected:
 	void SetWeaponState(EWeaponState newState);
 
 	void SetWantsToFire(bool newWantsToFire);
+
 	
 	bool CanFire();
 	bool CanReload();
@@ -158,6 +162,9 @@ protected:
 	UPROPERTY(BlueprintAssignable)
 		FAmmoChanged OnAmmoChanged;
 
+	UPROPERTY(EditAnywhere, Category = Config, meta = (ToolTip = "How many seperate line traces are done per bullet fired"))
+		int raysPerShot;
+	
 	FTimerHandle cooldownTimerHandle;
 	FTimerHandle reloadTimerHandle;
 

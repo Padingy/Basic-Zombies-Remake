@@ -2,6 +2,7 @@
 
 
 #include "Zombies/Game/Interactables/MyInteractablesBase_DamagePlayer.h"
+#include "Zombies/Public/Components/AC_PerkComponent.h"
 #include "Zombies/Public/Player/ZombiesCharacter.h"
 
 AMyInteractablesBase_DamagePlayer::AMyInteractablesBase_DamagePlayer()
@@ -17,6 +18,5 @@ void AMyInteractablesBase_DamagePlayer::OnInteract(AZombiesCharacter* interactin
 
 	AController* controller = nullptr;
 	interactingPlayer->TakeDamage(damageAmount, damageEvent, controller, this);
-
 
 }

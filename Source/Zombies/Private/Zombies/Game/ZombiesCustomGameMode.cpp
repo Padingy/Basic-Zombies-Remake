@@ -145,7 +145,7 @@ void AZombiesCustomGameMode::SpawningMobsTimer()
 					mobsLeftToSpawn--;
 					numOfMobsSpawned++;
 
-					randSpawnPoint->StartCooldown(); //Got to find a way to have this cooldown without it crashing
+					randSpawnPoint->StartCooldown();
 				}
 			}
 			else

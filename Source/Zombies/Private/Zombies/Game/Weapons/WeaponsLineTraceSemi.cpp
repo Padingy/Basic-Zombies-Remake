@@ -3,6 +3,8 @@
 
 #include "Zombies/Game/Weapons/WeaponsLineTraceSemi.h"
 
+#include "Player/ZombiesCharacter.h"
+
 AWeaponsLineTraceSemi::AWeaponsLineTraceSemi()
 {
 
@@ -15,7 +17,7 @@ void AWeaponsLineTraceSemi::Fire()
 		SetWantsToFire(true);
 
 		Super::Fire();
-		StartFiringCooldown(weaponData.fireRate);
+		StartFiringCooldown(weaponData.fireRate * weaponOwner->GetFireRateMultiplier());
 	}
 }
 

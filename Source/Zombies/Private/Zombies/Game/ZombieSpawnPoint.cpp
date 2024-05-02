@@ -28,7 +28,6 @@ void AZombieSpawnPoint::StartCooldown()
 	{
 		isUsed = false;
 	}, resetTime, false);
-	
 }
 
 void AZombieSpawnPoint::EndCooldown()

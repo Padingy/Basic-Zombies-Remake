@@ -3,6 +3,8 @@
 
 #include "Zombies/Game/Weapons/WeaponsLineTraceFullAuto.h"
 
+#include "Player/ZombiesCharacter.h"
+
 AWeaponsLineTraceFullAuto::AWeaponsLineTraceFullAuto()
 {
 
@@ -17,7 +19,7 @@ void AWeaponsLineTraceFullAuto::Fire()
 
 		if (!cooldownTimerHandle.IsValid())
 		{
-			StartFiringCooldown(weaponData.fireRate);
+			StartFiringCooldown(weaponData.fireRate * weaponOwner->GetFireRateMultiplier());
 		}
 	}
 }

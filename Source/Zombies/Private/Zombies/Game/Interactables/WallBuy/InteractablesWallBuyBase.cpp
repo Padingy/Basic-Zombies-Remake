@@ -29,6 +29,7 @@ AInteractablesWallBuyBase::AInteractablesWallBuyBase()
 void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
 	Super::OnInteract(interactingPlayer);
+	//Weapon mesh coming out of the wall over time when bought animation handling
 	if (skeletalMeshComp->GetRelativeLocation() != animEndLocation)
 	{
 		skeletalMeshComp->SetHiddenInGame(false);
@@ -44,6 +45,7 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 		}, 0.05, true);
 	}
 
+	//Logic for if player doesnt have all weapon slots available filled 
 	if (interactingPlayer->GetWeaponArray().Num() < interactingPlayer->GetMaxWeapons())
 	{
 		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
@@ -67,6 +69,7 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 			}
 		}
 	}
+	//Logic for if player does have all available weapon slots filled
 	else if (interactingPlayer->GetWeaponArray().Num() >= interactingPlayer->GetMaxWeapons())
 	{
 		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))

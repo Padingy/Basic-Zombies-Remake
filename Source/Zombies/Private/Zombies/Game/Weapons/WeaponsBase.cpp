@@ -22,6 +22,8 @@ AWeaponsBase::AWeaponsBase()
 	weaponState = EWeaponState::Idle;
 
 	spreadMultiplier = 1.0f;
+
+	raysPerShot = 1;
 }
 
 void AWeaponsBase::Fire()
@@ -190,6 +192,16 @@ void AWeaponsBase::SetWantsToFire(bool newWantsToFire)
 {
 	bWantsToFire = newWantsToFire;
 	DetermineWeaponState();
+}
+
+void AWeaponsBase::SetRaysPerShot(int newRaysPerShot)
+{
+	raysPerShot = newRaysPerShot;
+}
+
+int AWeaponsBase::GetRaysPerShot()
+{
+	return raysPerShot;
 }
 
 bool AWeaponsBase::CanFire()
