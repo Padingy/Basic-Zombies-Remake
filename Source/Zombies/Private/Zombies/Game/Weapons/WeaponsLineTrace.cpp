@@ -66,7 +66,7 @@ void AWeaponsLineTrace::DealWithHits(TArray<FHitResult>& hitResults, FVector& sh
 			{
 				FString hitBone = hit.BoneName.ToString();
 
-				DealDamage(weaponData.damage, hit, shootDir);
+				DealDamage(damageData.GetDamage(hit.BoneName), hit, shootDir);
 				zombie->Hit(weaponOwner, hitBone);
 
 				UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
@@ -78,7 +78,7 @@ void AWeaponsLineTrace::DealWithHits(TArray<FHitResult>& hitResults, FVector& sh
 void AWeaponsLineTrace::DealDamage(float damage, FHitResult& hitActor, FVector& shootDir)
 {
 	FPointDamageEvent damageEvent;
-	damageEvent.Damage = weaponData.damage;
+	damageEvent.Damage = damage;
 	damageEvent.ShotDirection = shootDir;
 
 	hitActor.GetActor()->TakeDamage(damage, damageEvent, weaponOwner->Controller, this);

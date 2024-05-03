@@ -63,11 +63,6 @@ bool AWeaponsBase::GetInfiniteAmmo() const
 	return weaponData.bInfiniteAmmo;
 }
 
-float AWeaponsBase::GetDamage() const
-{
-	return weaponData.damage;
-}
-
 int32 AWeaponsBase::GetMagaezineSize() const
 {
 	return weaponData.magazineSize;

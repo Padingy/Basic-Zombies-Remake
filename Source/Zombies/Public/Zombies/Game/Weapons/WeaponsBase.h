@@ -29,15 +29,60 @@ enum class EWeaponType : uint8
 };
 
 USTRUCT()
+struct FDamageData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "Damage Data")
+	float baseDamage;
+
+	UPROPERTY(EditAnywhere, Category = "Damage Data")
+	float headMultiplier;
+
+	UPROPERTY(EditAnywhere, Category = "Damage Data")
+	float torsoMultiplier;
+
+	UPROPERTY(EditAnywhere, Category = "Damage Data")
+	float limbMultiplier;
+
+	FDamageData()
+	{
+		baseDamage = 50.0f;
+		headMultiplier = 2.0f;
+		torsoMultiplier = 1.0f;
+		limbMultiplier = 0.6f;
+	}
+
+	float GetDamage(FName hitBone)
+	{
+		const FString hitBoneString = hitBone.ToString();
+		
+		if (hitBoneString.Contains("head") || hitBoneString.Contains("neck"))
+		{
+			return baseDamage * headMultiplier;
+		}
+		//Body Hits
+		if (hitBoneString.Contains("spine") || hitBoneString.Contains("pelvis"))
+		{
+			return baseDamage * torsoMultiplier;
+		}
+		//Limb Hits
+		if (hitBoneString.Contains("_l") || hitBoneString.Contains("_r"))
+		{
+			return baseDamage * limbMultiplier;
+		}
+
+		return 0.0f;
+	}
+};
+
+USTRUCT()
 struct FWeaponData
 {
 	GENERATED_USTRUCT_BODY()
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Data")
 	bool bInfiniteAmmo;
-
-	UPROPERTY(EditAnywhere, Category = "Weapon Data")
-	float damage;
 
 	UPROPERTY(EditAnywhere, Category = "Weapon Data")
 	int32 magazineSize;
@@ -55,7 +100,6 @@ struct FWeaponData
 	FWeaponData()
 	{
 		bInfiniteAmmo = false;
-		damage = 50.0f;
 		magazineSize = 30;
 		magazineAmount = 7;
 		fireRate = 0.2f;
@@ -79,7 +123,6 @@ public:
 	virtual void Reload();
 
 	bool GetInfiniteAmmo() const;
-	float GetDamage() const;
 	int32 GetMagaezineSize() const;
 	int32 GetMagazineAmount() const;
 	float GetFireRate() const;
@@ -144,6 +187,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = Config)
 		FWeaponData weaponData;
+
+	UPROPERTY(EditAnywhere, Category = Config)
+		FDamageData damageData;
 
 	EWeaponState weaponState;
 
