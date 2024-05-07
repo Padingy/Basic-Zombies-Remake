@@ -24,6 +24,7 @@ void APerk_StaminUp::UpdatePerk(AActor* owner)
 
 void APerk_StaminUp::RemovePerk(AActor* owner)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Staminup Remove Perk"));
 	AZombiesCharacter* zombiesCharacter = Cast<AZombiesCharacter>(owner);
 	if (zombiesCharacter)
 	{

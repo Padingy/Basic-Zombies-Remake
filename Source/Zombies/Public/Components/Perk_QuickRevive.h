@@ -17,7 +17,7 @@ class ZOMBIES_API APerk_QuickRevive : public APerkBase
 public:
 	APerk_QuickRevive();
 
-	void UpdatePerk(AActor* owner) override;
+	virtual void UpdatePerk(AActor* owner) override;
 
-	void RemovePerk(AActor* owner) override;
+	virtual void RemovePerk(AActor* owner) override;
 };

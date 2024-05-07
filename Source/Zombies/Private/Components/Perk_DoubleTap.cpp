@@ -23,6 +23,7 @@ void APerk_DoubleTap::UpdatePerk(AActor* owner)
 
 void APerk_DoubleTap::RemovePerk(AActor* owner)
 {
+	UE_LOG(LogTemp, Warning, TEXT("DT Remove Perk"));
 	AZombiesCharacter* zombiesCharacter = Cast<AZombiesCharacter>(owner);
 	if (zombiesCharacter)
 	{
@@ -30,3 +31,4 @@ void APerk_DoubleTap::RemovePerk(AActor* owner)
 		zombiesCharacter->SetFireRateMultiplier(1.0f);
 	}
 }
+

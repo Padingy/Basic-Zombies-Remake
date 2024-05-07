@@ -471,6 +471,7 @@ void AZombiesCharacter::Die()
 
 	if (UAC_PerkComponent* perkComponent = Cast<UAC_PerkComponent>(this->GetComponentByClass(UAC_PerkComponent::StaticClass())))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("CurrentPerks.num: %d"), perkComponent->GetCurrentPerks().Num());
 		perkComponent->RemoveAllPerks();
 	}
 }

@@ -17,8 +17,8 @@ class ZOMBIES_API APerk_Juggernog : public APerkBase
 public:
 	APerk_Juggernog();
 
-	void UpdatePerk(AActor* owner) override;
+	virtual void UpdatePerk(AActor* owner) override;
 
-	void RemovePerk(AActor* owner) override;
+	virtual void RemovePerk(AActor* owner) override;
 	
 };

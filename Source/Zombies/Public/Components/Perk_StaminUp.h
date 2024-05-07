@@ -17,9 +17,9 @@ class ZOMBIES_API APerk_StaminUp : public APerkBase
 public:
 	APerk_StaminUp();
 
-	void UpdatePerk(AActor* owner) override;
+	virtual void UpdatePerk(AActor* owner) override;
 
-	void RemovePerk(AActor* owner) override;
+	virtual void RemovePerk(AActor* owner) override;
 
 protected:
 	float staminaMultiplier;

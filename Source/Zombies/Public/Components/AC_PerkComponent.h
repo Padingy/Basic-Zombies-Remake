@@ -19,7 +19,7 @@ public:
 
 	virtual void BeginPlay() override;
 
-	void AddPerk(APerkBase* perk);
+	bool AddPerk(APerkBase* perk);
 	void RemovePerk(APerkBase* perk);
 	void UpdatePerk(APerkBase* perk);
 
@@ -31,6 +31,8 @@ public:
 	void RemoveAllPerks();
 
 protected:
+
+	UPROPERTY()
 	TArray<APerkBase*> currentPerks;
 
 		

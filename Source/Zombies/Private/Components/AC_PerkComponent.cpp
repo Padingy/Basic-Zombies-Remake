@@ -2,16 +2,11 @@
 
 
 #include "Components/AC_PerkComponent.h"
-#include "Zombies/Public/Player/ZombiesCharacter.h"
 
 // Sets default values for this component's properties
 UAC_PerkComponent::UAC_PerkComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = false;
-
-	// ...
+	
 }
 
 
@@ -24,20 +19,15 @@ void UAC_PerkComponent::BeginPlay()
 	
 }
 
-void UAC_PerkComponent::AddPerk(APerkBase* perk)
+bool UAC_PerkComponent::AddPerk(APerkBase* perk)
 {
-	// if (!currentPerks.Contains(perk))
-	// {
-	// 	currentPerks.AddUnique(perk);
-	// 	perk->UpdatePerk(GetOwner());
-	// }
-
 	if (QueryPerk(perk->GetName()) == nullptr)
 	{
 		currentPerks.AddUnique(perk);
 		perk->UpdatePerk(GetOwner());
+		return true;
 	}
-	
+	return false;
 }
 
 void UAC_PerkComponent::RemovePerk(APerkBase* perk)
@@ -67,7 +57,10 @@ void UAC_PerkComponent::RemoveAllPerks()
 {
 	for (APerkBase* perk : currentPerks)
 	{
-		perk->RemovePerk(GetOwner());
+		if (perk)
+		{
+			perk->RemovePerk(GetOwner());
+		}
 	}
 	currentPerks.Empty();
 }

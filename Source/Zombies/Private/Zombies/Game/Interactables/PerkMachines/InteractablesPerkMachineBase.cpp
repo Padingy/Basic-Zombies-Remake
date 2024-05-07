@@ -18,7 +18,11 @@ void AInteractablesPerkMachineBase::OnInteract(AZombiesCharacter* interactingPla
 		if (perkType != nullptr)
 		{
 			APerkBase* perkTypePointer = NewObject<APerkBase>(GetTransientPackage(), perkType);
-			perkComponent->AddPerk(perkTypePointer);
+			
+			if (perkComponent->AddPerk(perkTypePointer))
+			{
+				interactingPlayer->DecreasePoints(cost);
+			}
 		}
 	}
 }

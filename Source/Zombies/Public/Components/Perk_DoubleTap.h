@@ -17,7 +17,7 @@ class ZOMBIES_API APerk_DoubleTap : public APerkBase
 public:
 	APerk_DoubleTap();
 
-	void UpdatePerk(AActor* owner) override;
+	virtual void UpdatePerk(AActor* owner) override;
 
-	void RemovePerk(AActor* owner) override;
+	virtual void RemovePerk(AActor* owner) override;
 };
