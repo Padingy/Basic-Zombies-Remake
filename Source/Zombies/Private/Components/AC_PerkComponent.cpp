@@ -26,11 +26,18 @@ void UAC_PerkComponent::BeginPlay()
 
 void UAC_PerkComponent::AddPerk(APerkBase* perk)
 {
-	if (!currentPerks.Contains(perk))
+	// if (!currentPerks.Contains(perk))
+	// {
+	// 	currentPerks.AddUnique(perk);
+	// 	perk->UpdatePerk(GetOwner());
+	// }
+
+	if (QueryPerk(perk->GetName()) == nullptr)
 	{
 		currentPerks.AddUnique(perk);
 		perk->UpdatePerk(GetOwner());
 	}
+	
 }
 
 void UAC_PerkComponent::RemovePerk(APerkBase* perk)
