@@ -8,6 +8,13 @@ APerk_SpeedCola::APerk_SpeedCola()
 {
 	name = TEXT("SpeedCola");
 	reloadSpeedMultiplier = 1.5f;
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> perkIconTextOBJ(TEXT("Texture2D'/Game/Assets/PerkIcons/Speed_Cola_HUD_Icon.Speed_Cola_HUD_Icon'"));
+
+	if (perkIconTextOBJ.Object != NULL)
+	{
+		perkIcon = perkIconTextOBJ.Object;
+	}
 }
 
 void APerk_SpeedCola::UpdatePerk(AActor* owner)

@@ -23,6 +23,11 @@ public:
 
 	FName GetName() const;
 
+	UFUNCTION(BlueprintCallable)
+	UTexture2D* GetPerkIcon();
+
 protected:
 	FName name;
+
+	UTexture2D* perkIcon;
 };

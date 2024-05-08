@@ -7,6 +7,12 @@
 APerk_Juggernog::APerk_Juggernog()
 {
 	name = TEXT("Juggernog");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> perkIconTextOBJ(TEXT("Texture2D'/Game/Assets/PerkIcons/Juggernog_HUD_icon.Juggernog_HUD_icon'"));
+
+	if (perkIconTextOBJ.Object != NULL)
+	{
+		perkIcon = perkIconTextOBJ.Object;
+	}
 }
 
 void APerk_Juggernog::UpdatePerk(AActor* owner)

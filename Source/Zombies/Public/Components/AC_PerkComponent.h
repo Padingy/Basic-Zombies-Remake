@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "AC_PerkComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FPerksChanged);
 
 UCLASS(Blueprintable, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class ZOMBIES_API UAC_PerkComponent : public UActorComponent
@@ -24,7 +25,8 @@ public:
 	void UpdatePerk(APerkBase* perk);
 
 	APerkBase* QueryPerk(FName perkName);
-	
+
+	UFUNCTION(BlueprintCallable)
 	TArray<APerkBase*> GetCurrentPerks();
 	
 	void UpdateAllPerks();
@@ -35,5 +37,6 @@ protected:
 	UPROPERTY()
 	TArray<APerkBase*> currentPerks;
 
-		
+	UPROPERTY(BlueprintAssignable)
+	FPerksChanged OnPerksChanged;;
 };

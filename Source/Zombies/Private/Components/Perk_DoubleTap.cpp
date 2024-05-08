@@ -9,6 +9,12 @@ class AWeaponsBase;
 APerk_DoubleTap::APerk_DoubleTap()
 {
 	name = TEXT("DoubleTap");
+	static ConstructorHelpers::FObjectFinder<UTexture2D> perkIconTextOBJ(TEXT("Texture2D'/Game/Assets/PerkIcons/Double_Tap_II_HUD_icon.Double_Tap_II_HUD_icon'"));
+
+	if (perkIconTextOBJ.Object != NULL)
+	{
+		perkIcon = perkIconTextOBJ.Object;
+	}
 }
 
 void APerk_DoubleTap::UpdatePerk(AActor* owner)

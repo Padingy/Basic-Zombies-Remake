@@ -6,6 +6,12 @@
 
 APerk_QuickRevive::APerk_QuickRevive()
 {
+	static ConstructorHelpers::FObjectFinder<UTexture2D> perkIconTextOBJ(TEXT("Texture2D'/Game/Assets/PerkIcons/Quick_Revive_HUD_Icon.Quick_Revive_HUD_Icon'"));
+
+	if (perkIconTextOBJ.Object != NULL)
+	{
+		perkIcon = perkIconTextOBJ.Object;
+	}
 }
 
 void APerk_QuickRevive::UpdatePerk(AActor* owner)

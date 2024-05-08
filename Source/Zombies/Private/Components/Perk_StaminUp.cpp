@@ -9,6 +9,13 @@ APerk_StaminUp::APerk_StaminUp()
 {
 	name = TEXT("StaminUp");
 	staminaMultiplier = 2.0f;
+
+	static ConstructorHelpers::FObjectFinder<UTexture2D> perkIconTextOBJ(TEXT("Texture2D'/Game/Assets/PerkIcons/Stamin-Up_HUD_icon.Stamin-Up_HUD_icon'"));
+
+	if (perkIconTextOBJ.Object != NULL)
+	{
+		perkIcon = perkIconTextOBJ.Object;
+	}
 }
 
 void APerk_StaminUp::UpdatePerk(AActor* owner)

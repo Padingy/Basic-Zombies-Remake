@@ -25,6 +25,7 @@ bool UAC_PerkComponent::AddPerk(APerkBase* perk)
 	{
 		currentPerks.AddUnique(perk);
 		perk->UpdatePerk(GetOwner());
+		OnPerksChanged.Broadcast();
 		return true;
 	}
 	return false;
@@ -34,6 +35,7 @@ void UAC_PerkComponent::RemovePerk(APerkBase* perk)
 {
 	currentPerks.Remove(perk);
 	perk->RemovePerk(GetOwner());
+	OnPerksChanged.Broadcast();
 }
 
 APerkBase* UAC_PerkComponent::QueryPerk(FName perkName)
@@ -63,6 +65,7 @@ void UAC_PerkComponent::RemoveAllPerks()
 		}
 	}
 	currentPerks.Empty();
+	OnPerksChanged.Broadcast();
 }
 
 
