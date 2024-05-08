@@ -33,7 +33,7 @@ AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer
 	rayPerShotMultiplier = 1;
 	fireRateMultiplier = 1.0f;
 
-	revivalTime = 1.0f;
+	revivalTime = 0.0f;
 }
 
 void AZombiesCharacter::BeginPlay()
