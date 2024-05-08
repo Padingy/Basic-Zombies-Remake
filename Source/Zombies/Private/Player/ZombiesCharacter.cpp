@@ -488,6 +488,7 @@ void AZombiesCharacter::Revive()
 	}
 
 	SetHUD();
+	OnPointsChanged.Broadcast(points);
 	
 	Mesh1P->SetHiddenInGame(false);
 	currentWeapon->SetActorHiddenInGame(false);
