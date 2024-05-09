@@ -23,7 +23,7 @@ AZombiesCustomGameMode::AZombiesCustomGameMode()
 	mobsLeftToSpawn = totalMobsInRound; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
 	numOfMobsSpawned = 0;
 	mobsRemainingToKill = totalMobsInRound;
-	maxMobsSpawned = 5;
+	maxMobsSpawned = 24;
 	mobsSpawnedPerIteration = 3;
 
 	changingRoundTime = 3.0f;
