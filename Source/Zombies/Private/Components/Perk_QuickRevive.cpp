@@ -19,7 +19,7 @@ void APerk_QuickRevive::UpdatePerk(AActor* owner)
 	AZombiesCharacter* zombiesCharacter = Cast<AZombiesCharacter>(owner);
 	if (zombiesCharacter)
 	{
-		zombiesCharacter->SetRevivalTime(5.0f);
+		zombiesCharacter->SetRevivalTime(2.0f);
 	}
 }
 

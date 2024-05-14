@@ -5,6 +5,7 @@
 #include "Zombies/Public/Player/CustomCharacterMovementComponent.h"
 #include "Camera/CameraComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Components/CapsuleComponent.h"
 #include "Engine/World.h"
 #include "Zombies/Public/Zombies/Game/Interactables/InteractablesBase.h"
 #include "Zombies/Public/Zombies/Game/Weapons/WeaponsBase.h"
@@ -452,7 +453,6 @@ void AZombiesCharacter::Die()
 		static FName CollisionProfileName(TEXT("Ragdoll"));
 		GetMesh()->SetCollisionProfileName(CollisionProfileName);
 	}
-	SetActorEnableCollision(true);
 
 	GetMesh()->SetSimulatePhysics(true);
 
@@ -483,10 +483,13 @@ void AZombiesCharacter::Revive()
 	
 	if (GetMesh())
 	{
-		static FName CollisionProfileName(TEXT("CharacterMesh"));
+		static FName CollisionProfileName(TEXT("Player"));
 		GetMesh()->SetCollisionProfileName(CollisionProfileName);
 	}
 
+	GetMesh()->AttachToComponent(GetCapsuleComponent(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, false));
+	GetMesh()->SetRelativeLocationAndRotation(FVector(0.0f, 0.0f, -95.0f), FRotator(0.0f, -90.0f, 0.0f));
+	
 	SetHUD();
 	OnPointsChanged.Broadcast(points);
 	

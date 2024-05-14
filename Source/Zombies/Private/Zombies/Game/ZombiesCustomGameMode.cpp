@@ -41,38 +41,7 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 
 	if (playerSpawnsSet == false)
 		SetPlayerSpawns();
-
-	/*if (PlayerSpawnPoints.Num() > 0)
-	{
-		int32 randPlayerSpawnPoint = FMath::RandRange(0, PlayerSpawnPoints.Num() - 1);
-
-		APlayerSpawnPoint* spawnPoint = PlayerSpawnPoints[randPlayerSpawnPoint];
-
-		if (!spawnPoint->GetIsUsed())
-		{
-			FVector SpawnLocation = spawnPoint->GetActorLocation();
-			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
-			{
-
-				NewPlayer->Possess(pawn);
-				spawnPoint->SetIsUsed(true);
-			}
-		}
-	}*/
-
-	/*APlayerSpawnPoint* randPlayerSpawnPoint = PlayerSpawnPoints[FMath::RandRange(0, PlayerSpawnPoints.Num() - 1)];
-	if (!randPlayerSpawnPoint->GetIsUsed())
-	{
-		FVector SpawnLocation = randPlayerSpawnPoint->GetActorLocation();
-		if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
-		{
-
-			NewPlayer->Possess(pawn);
-			randPlayerSpawnPoint->SetIsUsed(true);
-		}
-	}*/
-
-
+	
 	for (APlayerSpawnPoint* spawnPoint : PlayerSpawnPoints)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Player Spawn Points")); 
@@ -81,7 +50,6 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 			FVector SpawnLocation = spawnPoint->GetActorLocation();
 			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
 			{
-
 				NewPlayer->Possess(pawn);
 				spawnPoint->SetIsUsed(true);
 			}

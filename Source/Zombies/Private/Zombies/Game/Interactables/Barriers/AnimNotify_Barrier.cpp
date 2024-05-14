@@ -8,7 +8,13 @@ void UAnimNotify_Barrier::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSeq
 {
 	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
 
-	
+	if (MeshComp && MeshComp->GetOwner())
+	{
+		if (AInteractablesBarrierBase* barrier = Cast<AInteractablesBarrierBase>(MeshComp->GetOwner()))
+		{
+			barrier->HandleAnimNotify();
+		}
+	}
 }
 
 void UAnimNotify_Barrier::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, float FrameDeltaTime)
@@ -17,13 +23,6 @@ void UAnimNotify_Barrier::NotifyTick(USkeletalMeshComponent* MeshComp, UAnimSequ
 	{
 		if (AInteractablesBarrierBase* barrier = Cast<AInteractablesBarrierBase>(MeshComp->GetOwner()))
 		{
-			/*float opacityValue = 0.0f;
-			for (const FAnimNotifyEvent& notifyEvent : Animation->Notifies)
-			{
-				opacityValue = (notifyEvent.GetDuration() * FrameDeltaTime) * 10;
-
-				UE_LOG(LogTemp, Warning, TEXT("AnimNotifyDuration: %f"), opacityValue);
-			}*/
 			barrier->ChangeOpacityValue(-0.02f);
 		}
 	}
@@ -33,10 +32,9 @@ void UAnimNotify_Barrier::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSeque
 {
 	if (MeshComp && MeshComp->GetOwner())
 	{
-		if (AInteractablesBarrierBase* barrier = Cast<AInteractablesBarrierBase>(MeshComp->GetOwner()))
+		if (AActor* owner = MeshComp->GetOwner())
 		{
-			barrier->HandleAnimNotify();
-			barrier->MarkPendingKill();
+			owner->MarkPendingKill();
 		}
 	}
 }
