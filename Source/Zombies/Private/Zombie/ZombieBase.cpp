@@ -94,6 +94,12 @@ bool AZombieBase::DecreaseHealth(float value)
 	return false;
 }
 
+void AZombieBase::SetHealth(float newHealth)
+{
+	maxHealth = newHealth;
+	health = maxHealth;
+}
+
 float AZombieBase::GetHealth()
 {
 	return health;

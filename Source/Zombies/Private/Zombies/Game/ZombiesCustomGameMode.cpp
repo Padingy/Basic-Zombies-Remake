@@ -20,12 +20,13 @@ AZombiesCustomGameMode::AZombiesCustomGameMode()
 
 	currentRound = 1;
 	totalMobsInRound = currentRound * 8;
-	mobsLeftToSpawn = totalMobsInRound; //(currentRound * 0.15) * 24 < Formula for normal COD zombies Zombies per round after round 10
+	mobsLeftToSpawn = totalMobsInRound;
 	numOfMobsSpawned = 0;
 	mobsRemainingToKill = totalMobsInRound;
+	healthOfZombies = 150;
 	maxMobsSpawned = 24;
 	mobsSpawnedPerIteration = 3;
-
+	
 	changingRoundTime = 3.0f;
 }
 
@@ -110,6 +111,7 @@ void AZombiesCustomGameMode::SpawningMobsTimer()
 				FVector spawnLocation = randSpawnPoint->GetActorLocation();
 				if (AZombieBase* zombie = GetWorld()->SpawnActor<AZombieBase>(zombieClass, spawnLocation, FRotator::ZeroRotator))
 				{
+					zombie->SetHealth(healthOfZombies);
 					mobsLeftToSpawn--;
 					numOfMobsSpawned++;
 
@@ -137,7 +139,22 @@ void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 	GetWorld()->GetTimerManager().SetTimer(changingRoundTimer, [this, newRound]()
 	{
 		currentRound = newRound;
-		totalMobsInRound = currentRound * 8;
+		if (newRound <= 5)
+		{
+			totalMobsInRound = currentRound * 6;
+			healthOfZombies += 100;
+		}
+		else if (newRound <= 10)
+		{
+			totalMobsInRound += 3;
+			healthOfZombies += 100;
+		}
+		else
+		{
+			totalMobsInRound = (currentRound * 0.15) * 24;
+			healthOfZombies *= 1.1;
+		}
+		
 		mobsRemainingToKill = totalMobsInRound;
 		mobsLeftToSpawn = totalMobsInRound;
 
@@ -175,18 +192,6 @@ void AZombiesCustomGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMo
 	{
 		StartNewRound(currentRound + 1);
 	}
-
-	//if (mobsLeftToSpawn >= 0)
-	//{
-
-	//}
-	//else //No Mobs left to spawn in  current round
-	//{
-	//	if (mobsRemainingToKill <= 0)
-	//	{
-	//		StartNewRound(currentRound + 1);
-	//	}
-	//}
 }
 
 void AZombiesCustomGameMode::DecreaseRemainingMobs()

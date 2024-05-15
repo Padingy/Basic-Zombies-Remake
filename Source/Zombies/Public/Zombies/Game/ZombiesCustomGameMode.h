@@ -60,6 +60,7 @@ protected:
 	int32 mobsLeftToSpawn;
 	int32 numOfMobsSpawned;
 	int32 mobsRemainingToKill;
+	int32 healthOfZombies;
 
 	UPROPERTY(EditAnywhere, Category = "Spawning Config")
 		int32 maxMobsSpawned;

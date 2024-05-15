@@ -45,6 +45,7 @@ public:
 
 	void HandleBoneHits(class AZombiesCharacter* attacker, FString hitBone);
 	bool DecreaseHealth(float value);
+	void SetHealth(float newHealth);
 	float GetHealth();
 
 	virtual float TakeDamage(float Damage, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
