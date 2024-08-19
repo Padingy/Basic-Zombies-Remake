@@ -9,12 +9,15 @@ AInteractablesBarrierBase::AInteractablesBarrierBase()
 {
 	spawnZone1 = 0;
 	spawnZone2 = 1;
+
+	purchased = false;
 }
 
 void AInteractablesBarrierBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
-	if (interactingPlayer->GetPoints() >= cost)
+	if (interactingPlayer->GetPoints() >= cost && purchased == false)
 	{
+		purchased = true;
 		AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
 		
 		skeletalMeshComp->PlayAnimation(openAnimation, false);
@@ -23,6 +26,15 @@ void AInteractablesBarrierBase::OnInteract(AZombiesCharacter* interactingPlayer)
 
 		gameMode->UpdateSpawnPoints(this);
 	}
+}
+
+void AInteractablesBarrierBase::OnInteractFree(AZombiesCharacter* interactingPlayer)
+{
+	AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
+		
+	skeletalMeshComp->PlayAnimation(openAnimation, false);
+
+	gameMode->UpdateSpawnPoints(this);
 }
 
 //Used on the AnimationNotify to remove collisions after the animation is finished

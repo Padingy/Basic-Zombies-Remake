@@ -28,7 +28,10 @@ AWeaponsBase::AWeaponsBase()
 
 void AWeaponsBase::Fire()
 {
-
+	if (fireAnimation)
+	{
+		weaponSkeletalMesh->PlayAnimation(fireAnimation, false);
+	}
 }
 
 void AWeaponsBase::EndFire()
@@ -45,15 +48,12 @@ void AWeaponsBase::Reload()
 
 		GetWorld()->GetTimerManager().ClearTimer(cooldownTimerHandle);
 
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString("Reloading Starting"));
-
 		GetWorld()->GetTimerManager().SetTimer(reloadTimerHandle, [this]()
 		{
 			HandleReload();
 			bWantsToReload = false;
 			DetermineWeaponState();
 
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString("Reloading Finished"));
 		}, weaponData.reloadSpeed / weaponOwner->GetReloadSpeedMultiplier(), false);
 	}
 }

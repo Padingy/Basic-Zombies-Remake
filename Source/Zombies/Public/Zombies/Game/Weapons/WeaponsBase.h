@@ -184,6 +184,9 @@ protected:
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
 		USkeletalMeshComponent* weaponSkeletalMesh;
+
+	UPROPERTY(EditAnywhere, Category = Animation)
+	UAnimationAsset* fireAnimation;
 	
 	UPROPERTY(EditAnywhere, Category = Config)
 		FWeaponData weaponData;

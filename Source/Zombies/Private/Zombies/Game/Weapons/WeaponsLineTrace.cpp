@@ -15,6 +15,7 @@ void AWeaponsLineTrace::Fire()
 {
 	if (currentAmmo > 0)
 	{
+		Super::Fire();
 		for (int i = 0; i < raysPerShot * weaponOwner->GetRayPerShotMultiplier(); i += 1)
 		{
 			UCameraComponent* cameraComponent = weaponOwner->FindComponentByClass<UCameraComponent>();
@@ -47,8 +48,6 @@ TArray<FHitResult> AWeaponsLineTrace::PerformLineTrace(FVector startLoc, FVector
 	FCollisionResponseParams collisionResponse;
 	collisionQuery.AddIgnoredActor(this);
 
-	DrawDebugLine(GetWorld(), startLoc, Endloc, FColor::Red, false, 2.0f, 0.0f, 1.0f);
-
 	TArray<FHitResult>hitResults;
 
 	GetWorld()->LineTraceMultiByChannel(hitResults, startLoc, Endloc, ECollisionChannel::ECC_GameTraceChannel2, collisionQuery, collisionResponse);
@@ -60,16 +59,19 @@ void AWeaponsLineTrace::DealWithHits(TArray<FHitResult>& hitResults, FVector& sh
 {
 	if (hitResults.Num() != 0)
 	{
+		TArray<AActor*> tempHitActors;
 		for (FHitResult hit : hitResults)
 		{
 			if (AZombieBase* zombie = Cast<AZombieBase>(hit.GetActor()))
 			{
-				FString hitBone = hit.BoneName.ToString();
+				if (!tempHitActors.Contains(zombie))
+				{
+					tempHitActors.AddUnique(zombie);
+					FString hitBone = hit.BoneName.ToString();
 
-				DealDamage(damageData.GetDamage(hit.BoneName), hit, shootDir);
-				zombie->Hit(weaponOwner, hitBone);
-
-				UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %s"), *hitBone);
+					DealDamage(damageData.GetDamage(hit.BoneName), hit, shootDir);
+					zombie->Hit(weaponOwner, hitBone);
+				}
 			}
 		}
 	}

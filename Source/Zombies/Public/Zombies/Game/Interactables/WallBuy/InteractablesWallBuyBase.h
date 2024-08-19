@@ -31,6 +31,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	void OnInteractTimerFunction();
+	
 	AWeaponsBase* CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray);
 
 protected:

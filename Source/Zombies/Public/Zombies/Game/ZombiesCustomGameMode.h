@@ -19,7 +19,6 @@ public:
 	AZombiesCustomGameMode();
 
 	void StartNewRound(int32 newRound);
-	void EndRound();
 
 	void UpdateSpawnPoints(AInteractablesBarrierBase* zoneActivator);
 

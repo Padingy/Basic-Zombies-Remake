@@ -31,10 +31,6 @@ void AZombieBase::DestroyActor()
 void AZombieBase::Hit(AZombiesCharacter* attacker, FString hitBone)
 {
 	HandleBoneHits(attacker, hitBone);
-
-	UE_LOG(LogTemp, Warning, TEXT("Bone Hit: %d"), attacker->GetPoints());
-
-	FString pointsMessage = "Points: " + FString::FromInt(attacker->GetPoints());
 }
 
 void AZombieBase::HandleBoneHits(AZombiesCharacter* attacker, FString hitBone)
@@ -109,8 +105,6 @@ float AZombieBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACo
 {
 	float actualDamage = Super::TakeDamage(Damage, DamageEvent, EventInstigator, DamageCauser);
 
-	UE_LOG(LogTemp, Warning, TEXT("ActualDamage: %f"), actualDamage);
-
 	if (actualDamage > 0.0f)
 	{
 		health -= actualDamage;
@@ -124,8 +118,6 @@ float AZombieBase::TakeDamage(float Damage, FDamageEvent const& DamageEvent, ACo
 			//Deal with HUD stuff when HUD class is made in the future
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Zombie Health: %f"), health);
 	return actualDamage;
 }
 
@@ -134,7 +126,6 @@ void AZombieBase::Die()
 	AZombiesCustomGameMode* gameMode = Cast<AZombiesCustomGameMode>(GetWorld()->GetAuthGameMode());
 	if (gameMode)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("GameMode is fine"));
 		gameMode->DecreaseRemainingMobs();
 		gameMode->CheckRoundStatus();
 	}

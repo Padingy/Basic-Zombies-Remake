@@ -34,7 +34,7 @@ void UAnimNotify_Barrier::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSeque
 	{
 		if (AActor* owner = MeshComp->GetOwner())
 		{
-			owner->MarkPendingKill();
+			owner->Destroy();
 		}
 	}
 }

@@ -19,12 +19,12 @@ AZombiesCustomGameMode::AZombiesCustomGameMode()
 	playerSpawnsSet = false;
 
 	currentRound = 1;
-	totalMobsInRound = currentRound * 8;
+	totalMobsInRound = 6;
 	mobsLeftToSpawn = totalMobsInRound;
 	numOfMobsSpawned = 0;
 	mobsRemainingToKill = totalMobsInRound;
 	healthOfZombies = 150;
-	maxMobsSpawned = 24;
+	maxMobsSpawned = 6; //24 at Round 10
 	mobsSpawnedPerIteration = 3;
 	
 	changingRoundTime = 3.0f;
@@ -42,18 +42,16 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 
 	if (playerSpawnsSet == false)
 		SetPlayerSpawns();
-	
-	for (APlayerSpawnPoint* spawnPoint : PlayerSpawnPoints)
+
+	if (PlayerSpawnPoints.Num() != 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Spawn Points")); 
-		if (!spawnPoint->GetIsUsed())
+		APlayerSpawnPoint* randPlayerSpawnPoint = PlayerSpawnPoints[FMath::RandRange(0, PlayerSpawnPoints.Num() - 1)];
+
+		FVector SpawnLocation = randPlayerSpawnPoint->GetActorLocation();
+		if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
 		{
-			FVector SpawnLocation = spawnPoint->GetActorLocation();
-			if (APawn* pawn = GetWorld()->SpawnActor<APawn>(playerClass, SpawnLocation, FRotator::ZeroRotator))
-			{
-				NewPlayer->Possess(pawn);
-				spawnPoint->SetIsUsed(true);
-			}
+			NewPlayer->Possess(pawn);
+			randPlayerSpawnPoint->SetIsUsed(true);
 		}
 	}
 
@@ -61,7 +59,6 @@ void AZombiesCustomGameMode::PostLogin(APlayerController* NewPlayer)
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AZombieSpawnPoint::StaticClass(), tempZombieSpawns);
 	for (AActor* actor : tempZombieSpawns)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Zombie Spawn Points")); 
 		if (AZombieSpawnPoint* spawnPoint = Cast<AZombieSpawnPoint>(actor))
 		{
 			if (spawnPoint->GetZone() == 0)
@@ -132,7 +129,6 @@ void AZombiesCustomGameMode::SpawningMobsTimer()
 
 void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Start new round"));
 	int32 newRoundTemp = newRound;
 	FTimerHandle changingRoundTimer;
 
@@ -141,13 +137,15 @@ void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 		currentRound = newRound;
 		if (newRound <= 5)
 		{
-			totalMobsInRound = currentRound * 6;
+			totalMobsInRound += 5;
 			healthOfZombies += 100;
+			maxMobsSpawned += 2;
 		}
 		else if (newRound <= 10)
 		{
 			totalMobsInRound += 3;
 			healthOfZombies += 100;
+			maxMobsSpawned += 2;
 		}
 		else
 		{
@@ -161,14 +159,7 @@ void AZombiesCustomGameMode::StartNewRound(int32 newRound)
 		StartSpawningMobs();
 	}, changingRoundTime, false);
 
-	UE_LOG(LogTemp, Warning, TEXT("CurrentRound: %d"), currentRound);
-	
 	numOfMobsSpawned = 0;
-}
-
-void AZombiesCustomGameMode::EndRound()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Temp"));
 }
 
 void AZombiesCustomGameMode::UpdateSpawnPoints(AInteractablesBarrierBase* zoneActivator)
@@ -185,9 +176,8 @@ void AZombiesCustomGameMode::UpdateSpawnPoints(AInteractablesBarrierBase* zoneAc
 	}
 }
 
-void AZombiesCustomGameMode::CheckRoundStatus() //Check if MobsKilled == TotalMobsInRound to satart a new round
+void AZombiesCustomGameMode::CheckRoundStatus()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mobs remaining to kill: %d"), mobsRemainingToKill);
 	if (mobsRemainingToKill <= 0)
 	{
 		StartNewRound(currentRound + 1);

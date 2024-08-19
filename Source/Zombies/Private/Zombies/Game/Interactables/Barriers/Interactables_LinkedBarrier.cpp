@@ -16,7 +16,10 @@ void AInteractables_LinkedBarrier::OnInteract(AZombiesCharacter* interactingPlay
 	{
 		for (AInteractablesBarrierBase* linkedBarrier : linkedBarriers)
 		{
-			linkedBarrier->OnInteract(interactingPlayer);
+			if (IsValid(linkedBarrier))
+			{
+				linkedBarrier->OnInteractFree(interactingPlayer);
+			}
 		}
 	}
 }

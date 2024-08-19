@@ -28,35 +28,25 @@ AInteractablesWallBuyBase::AInteractablesWallBuyBase()
 //TODO: Refactor this to put the For loop into its own class.
 void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
-	Super::OnInteract(interactingPlayer);
-	//Weapon mesh coming out of the wall over time when bought animation handling
-	if (skeletalMeshComp->GetRelativeLocation() != animEndLocation)
+	//Logic for if player doesnt have all weapon slots available filled
+	if (interactingPlayer->GetPoints() >= cost)
 	{
-		skeletalMeshComp->SetHiddenInGame(false);
-		GetWorld()->GetTimerManager().SetTimer(animTimerHandle, [this] {
-			UGameInstance* gameInstance = GetGameInstance();
-
-			skeletalMeshComp->SetRelativeLocation(FMath::VInterpTo(skeletalMeshComp->GetRelativeLocation(), animEndLocation, gameInstance->GetWorld()->GetDeltaSeconds(), animSpeed));
-
-			if (skeletalMeshComp->GetRelativeLocation() == animEndLocation)
-			{
-				GetWorld()->GetTimerManager().ClearTimer(animTimerHandle);
-			}
-		}, 0.05, true);
-	}
-
-	//Logic for if player doesnt have all weapon slots available filled 
-	if (interactingPlayer->GetWeaponArray().Num() < interactingPlayer->GetMaxWeapons())
-	{
-		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
+		//Weapon mesh coming out of the wall over time when bought animation handling
+		if (skeletalMeshComp->GetRelativeLocation() != animEndLocation)
 		{
-			ownedWeapon->AddAmmo(500, true);
-
-			interactingPlayer->DecreasePoints(ammoCost);
+			skeletalMeshComp->SetHiddenInGame(false);
+			GetWorld()->GetTimerManager().SetTimer(animTimerHandle, this, &AInteractablesWallBuyBase::OnInteractTimerFunction, 0.05, true);
 		}
-		else
+		if (interactingPlayer->GetWeaponArray().Num() < interactingPlayer->GetMaxWeapons())
 		{
-			if (interactingPlayer->GetPoints() >= cost)
+			
+			if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
+			{
+				ownedWeapon->AddAmmo(500, true);
+
+				interactingPlayer->DecreasePoints(ammoCost);
+			}
+			else
 			{
 				FActorSpawnParameters spawnParams;
 				spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
@@ -68,31 +58,31 @@ void AInteractablesWallBuyBase::OnInteract(AZombiesCharacter* interactingPlayer)
 				interactingPlayer->DecreasePoints(cost);
 			}
 		}
-	}
-	//Logic for if player does have all available weapon slots filled
-	else if (interactingPlayer->GetWeaponArray().Num() >= interactingPlayer->GetMaxWeapons())
-	{
-		if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
+		//Logic for if player does have all available weapon slots filled
+		else if (interactingPlayer->GetWeaponArray().Num() >= interactingPlayer->GetMaxWeapons())
 		{
-			ownedWeapon->AddAmmo(500, true);
-
-			interactingPlayer->DecreasePoints(ammoCost);
-		}
-		else
-		{
-			if (interactingPlayer->GetPoints() >= cost)
+			if (AWeaponsBase* ownedWeapon = CheckIfPlayerOwnsWeapon(interactingPlayer->GetWeaponArray()))
 			{
-				FActorSpawnParameters spawnParams;
-				spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-				AWeaponsBase* newWeapon = GetWorld()->SpawnActor<AWeaponsBase>(weaponType, spawnParams);
+				ownedWeapon->AddAmmo(500, true);
 
-				AWeaponsBase* lastWeapon = interactingPlayer->GetCurrentWeapon();
+				interactingPlayer->DecreasePoints(ammoCost);
+			}
+			else
+			{
+				if (interactingPlayer->GetPoints() >= cost)
+				{
+					FActorSpawnParameters spawnParams;
+					spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+					AWeaponsBase* newWeapon = GetWorld()->SpawnActor<AWeaponsBase>(weaponType, spawnParams);
 
-				interactingPlayer->AddWeapon(newWeapon);
-				interactingPlayer->SetCurrentWeapon(newWeapon);
-				interactingPlayer->RemoveWeapon(lastWeapon);
+					AWeaponsBase* lastWeapon = interactingPlayer->GetCurrentWeapon();
 
-				interactingPlayer->DecreasePoints(cost);
+					interactingPlayer->AddWeapon(newWeapon);
+					interactingPlayer->SetCurrentWeapon(newWeapon);
+					interactingPlayer->RemoveWeapon(lastWeapon);
+
+					interactingPlayer->DecreasePoints(cost);
+				}
 			}
 		}
 	}
@@ -102,12 +92,10 @@ FString AInteractablesWallBuyBase::GetUIMessage(AZombiesCharacter* interactingPl
 {
 	bool playerOwnsWeapon = false;
 
-	UE_LOG(LogTemp, Warning, TEXT("PlayerOwnsWeapon: %d"), playerOwnsWeapon);
 	for (AWeaponsBase* weapon : interactingPlayer->GetWeaponArray())
 	{
 		if (weapon->GetClass() == weaponType)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Player Owns Weapon"));
 			playerOwnsWeapon = true;
 			break;
 		}
@@ -116,7 +104,6 @@ FString AInteractablesWallBuyBase::GetUIMessage(AZombiesCharacter* interactingPl
 			playerOwnsWeapon = false;
 		}
 	}
-	UE_LOG(LogTemp, Warning, TEXT("PlayerOwnsWeapon after for loop: %d"), playerOwnsWeapon);
 
 	if (playerOwnsWeapon)
 	{
@@ -133,6 +120,18 @@ void AInteractablesWallBuyBase::BeginPlay()
 	Super::BeginPlay();
 
 	animStartLocation = skeletalMeshComp->GetRelativeLocation();
+}
+
+void AInteractablesWallBuyBase::OnInteractTimerFunction()
+{
+	UGameInstance* gameInstance = GetGameInstance();
+
+	skeletalMeshComp->SetRelativeLocation(FMath::VInterpTo(skeletalMeshComp->GetRelativeLocation(), animEndLocation, gameInstance->GetWorld()->GetDeltaSeconds(), animSpeed));
+
+	if (skeletalMeshComp->GetRelativeLocation() == animEndLocation)
+	{
+		GetWorld()->GetTimerManager().ClearTimer(animTimerHandle);
+	}
 }
 
 AWeaponsBase* AInteractablesWallBuyBase::CheckIfPlayerOwnsWeapon(TArray<AWeaponsBase*> weaponArray)

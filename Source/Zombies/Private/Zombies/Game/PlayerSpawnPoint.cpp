@@ -24,7 +24,6 @@ void APlayerSpawnPoint::StartCooldown()
 
 	GetWorld()->GetTimerManager().SetTimer(spawnTimerHandle, [this]()
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PlayerSpawnPoint StartCooldown timer"));
 		isUsed = false;
 	}, 3.0f, false);
 }

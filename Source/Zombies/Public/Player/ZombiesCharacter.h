@@ -111,6 +111,9 @@ public:
 
 	void Die();
 
+	UFUNCTION(BlueprintCallable)
+		bool GetIsAlive();
+
 	void Revive();
 
 	void SetRevivalTime(float newRevivalTime);
@@ -198,8 +201,6 @@ protected:
 
 	AWeaponsBase* currentWeapon;
 
-	
-
 	bool bIsAiming;
 
 	UFUNCTION(BlueprintCallable)
@@ -254,4 +255,6 @@ protected:
 	float fireRateMultiplier;
 
 	float revivalTime;
+
+	bool isAlive;
 };

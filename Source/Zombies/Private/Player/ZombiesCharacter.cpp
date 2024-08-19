@@ -35,6 +35,8 @@ AZombiesCharacter::AZombiesCharacter(const FObjectInitializer& ObjectInitializer
 	fireRateMultiplier = 1.0f;
 
 	revivalTime = 0.0f;
+
+	isAlive = true;
 }
 
 void AZombiesCharacter::BeginPlay()
@@ -94,9 +96,7 @@ void AZombiesCharacter::RegenHealth()
 void AZombiesCharacter::RegenHealthTimerFunction()
 {
 	currentHealthCooldown += 0.05f;
-	FString debugMessage = FString::Printf(TEXT("Health: %s"), *FString::SanitizeFloat(playerData.health));
-
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
+	
 	if (currentHealthCooldown >= healthRegenCooldown)
 	{
 		if (playerData.health < playerData.maxHealth)
@@ -173,12 +173,6 @@ void AZombiesCharacter::UpdateStamina()
 	if (playerData.stamina > 0)
 	{
 		DecreaseStamina(staminaDecrement);
-
-		FString staminaAsString = FString::SanitizeFloat(playerData.stamina);
-
-		FString debugMessage = FString::Printf(TEXT("Stamina: %s"), *FString::SanitizeFloat(playerData.stamina));
-
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, debugMessage);
 	}
 	else
 	{
@@ -256,7 +250,6 @@ void AZombiesCharacter::FindInteractableObjects()
 	if (interactable == nullptr && tempHit)
 	{ 
 		interactable = tempHit;
-		UE_LOG(LogTemp, Warning, TEXT("WallBuy Interact Message: %s"), *interactable->UIMessage);
 		OnInteractMessageChanged.Broadcast(interactable->GetUIMessage(this));
 	} 
 	else if (interactable && tempHit == nullptr)
@@ -279,8 +272,6 @@ void AZombiesCharacter::SpawnStartingWeapons()
 {
 	int32 numOfStartingWeapons = FMath::Min(maxWeapons, startingWeaponClasses.Num());
 
-	UE_LOG(LogTemp, Warning, TEXT("NumOfStartingWeapons: %d"), numOfStartingWeapons);
-
 	if (startingWeaponClasses.Num() > 0)
 	{
 		for (int32 i = 0; i < numOfStartingWeapons; i++)
@@ -301,8 +292,6 @@ void AZombiesCharacter::AddWeapon(AWeaponsBase* weapon)
 {
 	weapon->SetNewOwner(this);
 	weaponArray.AddUnique(weapon);
-
-	UE_LOG(LogTemp, Warning, TEXT("WeaponArray.Num(): %d"), weaponArray.Num());
 }
 
 void AZombiesCharacter::RemoveWeapon(AWeaponsBase* weapon)
@@ -336,8 +325,6 @@ void AZombiesCharacter::SetCurrentWeapon(AWeaponsBase* newWeapon)
 
 		currentWeapon = newWeapon;
 		weaponIndex = weaponArray.Find(currentWeapon);
-		
-		UE_LOG(LogTemp, Warning, TEXT("Current Weapon Index: %d"), weaponIndex);
 
 		currentWeapon->SetNewOwner(this);
 		currentWeapon->OnEquip();
@@ -471,9 +458,13 @@ void AZombiesCharacter::Die()
 
 	if (UAC_PerkComponent* perkComponent = Cast<UAC_PerkComponent>(this->GetComponentByClass(UAC_PerkComponent::StaticClass())))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("CurrentPerks.num: %d"), perkComponent->GetCurrentPerks().Num());
 		perkComponent->RemoveAllPerks();
 	}
+}
+
+bool AZombiesCharacter::GetIsAlive()
+{
+	return isAlive;
 }
 
 void AZombiesCharacter::Revive()
@@ -595,7 +586,6 @@ void AZombiesCharacter::OnPrevWeapon()
 	if (weaponArray.Num() > 1)
 	{
 		float nextWeaponIndex = (weaponIndex + (weaponArray.Num() - 1)) % weaponArray.Num();
-		UE_LOG(LogTemp, Warning, TEXT("nextWeaponIndex %f"), nextWeaponIndex);
 		SetCurrentWeapon(weaponArray[nextWeaponIndex]);
 	}
 }

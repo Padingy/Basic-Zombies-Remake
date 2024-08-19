@@ -18,6 +18,7 @@ public:
 	AInteractablesBarrierBase();
 
 	virtual void OnInteract(class AZombiesCharacter* interactingPlayer) override;
+	void OnInteractFree(class AZombiesCharacter* interactingPlayer);
 
 	void HandleAnimNotify();
 
@@ -37,4 +38,6 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Spawning Zones")
 		int32 spawnZone2;
+
+	bool purchased;
 };

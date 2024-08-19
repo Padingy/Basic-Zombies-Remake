@@ -12,16 +12,19 @@ AInteractablesPerkMachineBase::AInteractablesPerkMachineBase()
 
 void AInteractablesPerkMachineBase::OnInteract(AZombiesCharacter* interactingPlayer)
 {
-	UAC_PerkComponent* perkComponent = Cast<UAC_PerkComponent>(interactingPlayer->GetComponentByClass(UAC_PerkComponent::StaticClass()));
-	if (perkComponent)
+	if (interactingPlayer->GetPoints() >= cost)
 	{
-		if (perkType != nullptr)
+		UAC_PerkComponent* perkComponent = Cast<UAC_PerkComponent>(interactingPlayer->GetComponentByClass(UAC_PerkComponent::StaticClass()));
+		if (perkComponent)
 		{
-			APerkBase* perkTypePointer = NewObject<APerkBase>(GetTransientPackage(), perkType);
-			
-			if (perkComponent->AddPerk(perkTypePointer))
+			if (perkType != nullptr)
 			{
-				interactingPlayer->DecreasePoints(cost);
+				APerkBase* perkTypePointer = NewObject<APerkBase>(GetTransientPackage(), perkType);
+			
+				if (perkComponent->AddPerk(perkTypePointer))
+				{
+					interactingPlayer->DecreasePoints(cost);
+				}
 			}
 		}
 	}
